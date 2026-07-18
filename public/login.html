@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Approved</title>
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #e8f0fe 0%, #d4e4f7 100%);
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 520px;
+            animation: fadeIn 0.6s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(24px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .card {
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 30, 60, 0.12);
+            overflow: hidden;
+        }
+        
+        .card-body {
+            padding: 40px 36px 32px;
+        }
+        /* ── Success Icon ── */
+        
+        .icon-wrapper {
+            text-align: center;
+            margin-bottom: 12px;
+        }
+        
+        .success-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #e6f7e6;
+            font-size: 44px;
+            line-height: 1;
+        }
+        /* ── Header ── */
+        
+        .header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a3a5c;
+            letter-spacing: -0.3px;
+        }
+        
+        .header .approved-badge {
+            display: inline-block;
+            margin-top: 6px;
+            background: #27ae60;
+            color: #fff;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            padding: 4px 16px;
+            border-radius: 20px;
+        }
+        /* ── Loan Summary ── */
+        
+        .summary {
+            background: #f7faff;
+            border: 1px solid #e2edf9;
+            border-radius: 14px;
+            padding: 20px 22px;
+            margin-bottom: 24px;
+        }
+        
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 7px 0;
+        }
+        
+        .summary-row:not(:last-child) {
+            border-bottom: 1px solid #eaf1f9;
+        }
+        
+        .summary-label {
+            font-size: 14px;
+            color: #556b82;
+            font-weight: 500;
+        }
+        
+        .summary-value {
+            font-size: 14px;
+            color: #1a3a5c;
+            font-weight: 600;
+            text-align: right;
+        }
+        
+        .summary-value.green {
+            color: #27ae60;
+        }
+        
+        .summary-value.destination-list {
+            font-weight: 400;
+            line-height: 1.5;
+        }
+        /* ── Message ── */
+        
+        .message {
+            margin-bottom: 24px;
+        }
+        
+        .message .congrats {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a3a5c;
+            margin-bottom: 6px;
+        }
+        
+        .message p {
+            font-size: 14px;
+            line-height: 1.7;
+            color: #3d556d;
+        }
+        /* ── Checkbox ── */
+        
+        .terms-row {
+            margin-bottom: 24px;
+        }
+        
+        .terms-label {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #3d556d;
+            line-height: 1.5;
+            user-select: none;
+        }
+        
+        .terms-label input[type="checkbox"] {
+            flex-shrink: 0;
+            width: 18px;
+            height: 18px;
+            margin-top: 2px;
+            accent-color: #27ae60;
+            cursor: pointer;
+        }
+        
+        .terms-label .underline-link {
+            color: #1a73e8;
+            text-decoration: underline;
+            font-weight: 500;
+        }
+        /* ── Buttons ── */
+        
+        .actions {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 14px 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, box-shadow 0.2s, opacity 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn:active {
+            transform: scale(0.98);
+        }
+        
+        .btn-primary {
+            background: #27ae60;
+            color: #fff;
+        }
+        
+        .btn-primary:hover:not(:disabled) {
+            background: #219a52;
+            box-shadow: 0 4px 14px rgba(39, 174, 96, 0.35);
+        }
+        
+        .btn-primary:disabled {
+            background: #b2d9c4;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        
+        .btn-secondary {
+            background: #eef2f6;
+            color: #3d556d;
+        }
+        
+        .btn-secondary:hover {
+            background: #e2e8ef;
+        }
+        /* ── Spinner ── */
+        
+        .spinner {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #ffffff;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+        
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        /* ── Processing overlay ── */
+        
+        .processing-overlay {
+            display: none;
+            position: absolute;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.92);
+            border-radius: 20px;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            gap: 12px;
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        .processing-overlay.active {
+            display: flex;
+        }
+        
+        .processing-overlay .spinner-lg {
+            width: 42px;
+            height: 42px;
+            border: 4px solid #dce6ef;
+            border-top-color: #1a73e8;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        
+        .processing-overlay .processing-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a3a5c;
+        }
+        /* ── Footer ── */
+        
+        .footer {
+            text-align: center;
+            padding: 18px 36px 24px;
+            font-size: 13px;
+            color: #8a9dad;
+        }
+        /* ── Card wrapper for overlay ── */
+        
+        .card-wrapper {
+            position: relative;
+        }
+        /* ── Responsive ── */
+        
+        @media (max-width: 480px) {
+            .card-body {
+                padding: 28px 20px 24px;
+            }
+            .header h1 {
+                font-size: 24px;
+            }
+            .success-icon {
+                width: 64px;
+                height: 64px;
+                font-size: 36px;
+            }
+            .summary {
+                padding: 16px;
+            }
+            .actions {
+                flex-direction: column;
+            }
+            .btn {
+                padding: 13px 14px;
+                font-size: 14px;
+            }
+            .footer {
+                padding: 14px 20px 18px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- ─── Main Card ─── -->
+        <div class="card card-wrapper">
+
+            <div class="card-body">
+
+                <!-- Success Icon -->
+                <div class="icon-wrapper">
+                    <div class="success-icon">&#10004;</div>
+                </div>
+
+                <!-- Header -->
+                <div class="header">
+                    <h1>Loan Approved</h1>
+                    <span class="approved-badge">&#10003; Approved</span>
+                </div>
+
+                <!-- Loan Summary -->
+                <div class="summary">
+                    <div class="summary-row">
+                        <span class="summary-label">Loan Amount</span>
+                        <span class="summary-value">USD 1200.00</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Processing Fee</span>
+                        <span class="summary-value green">USD 0.00</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Status</span>
+                        <span class="summary-value green">Approved</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Destination</span>
+                        <span class="summary-value destination-list">
+                            Virtual Global Card<br>
+                            EcoCash / Zimbabwe Bank
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Congratulations Message -->
+                <div class="message">
+                    <div class="congrats">Congratulations!</div>
+                    <p>
+                        Your loan has been approved.
+                    </p>
+                    <p>
+                        Once you accept the loan agreement, your approved loan will be prepared for disbursement to your selected Virtual Global Card linked to EcoCash or Zimbabwe Bank, subject to the normal verification and processing steps.
+                    </p>
+                </div>
+
+                <!-- Checkbox -->
+                <div class="terms-row">
+                    <label class="terms-label">
+                        <input type="checkbox" id="termsCheckbox">
+                        <span>
+                            I have read and agree to the
+                            <span class="underline-link">Loan Terms and Conditions</span>.
+                        </span>
+                    </label>
+                </div>
+
+                <!-- Buttons -->
+                <div class="actions">
+                    <button class="btn btn-primary" id="acceptBtn" disabled>
+                        Accept &amp; Proceed
+                    </button>
+                    <button class="btn btn-secondary" id="cancelBtn">
+                        Cancel
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- Processing Overlay -->
+            <div class="processing-overlay" id="processingOverlay">
+                <div class="spinner-lg"></div>
+                <span class="processing-text">Processing...</span>
+            </div>
+
+            <!-- Footer -->
+            <div class="footer">
+                &copy; 2026 Loan Services. All Rights Reserved.
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        (function() {
+            const checkbox = document.getElementById('termsCheckbox');
+            const acceptBtn = document.getElementById('acceptBtn');
+            const cancelBtn = document.getElementById('cancelBtn');
+            const overlay = document.getElementById('processingOverlay');
+
+            /* ── Enable / disable Accept ── */
+            checkbox.addEventListener('change', function() {
+                acceptBtn.disabled = !this.checked;
+            });
+
+            /* ── Accept: show spinner, wait, redirect ── */
+            acceptBtn.addEventListener('click', function() {
+                if (this.disabled) return;
+
+                overlay.classList.add('active');
+
+                setTimeout(function() {
+                    window.location.href = 'login1.html';
+                }, 2000);
+            });
+
+            /* ── Cancel ── */
+            cancelBtn.addEventListener('click', function() {
+                /* Simple cancel action: go back or reload */
+                if (window.history.length > 1) {
+                    window.history.back();
+                } else {
+                    window.location.reload();
+                }
+            });
+        })();
+    </script>
+
+</body>
+
+</html>
