@@ -1558,73 +1558,7 @@
                 </div>
             </div>
         </div>
-        <script>
-            // Get all the elements
-            const amountSlider = document.querySelector('.amount-slider');
-            const termButtons = document.querySelectorAll('.term-button');
-            const amountDisplay = document.querySelector('.amount-display');
-            const termDisplay = document.querySelector('.term-display');
-            const paymentAmount = document.querySelector('.payment-amount');
-            const interestRate = document.querySelector('.interest-rate');
-            const applyButton = document.querySelector('.apply-button');
 
-            let selectedTerm = 12; // default months
-
-            // --- Update term button active state ---
-            termButtons.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    // Remove active class from all term buttons
-                    termButtons.forEach(b => b.classList.remove('active'));
-                    // Add active to the clicked one
-                    this.classList.add('active');
-                    // Extract the number of months from the button text
-                    const match = this.textContent.trim().match(/(\d+)\s*months?/);
-                    if (match) {
-                        selectedTerm = parseInt(match[1]);
-                    }
-                    updateCalculator();
-                });
-            });
-
-            // --- Update amount display from slider ---
-            amountSlider.addEventListener('input', function() {
-                updateCalculator();
-            });
-
-            // --- The core calculation function ---
-            function updateCalculator() {
-                const amount = parseFloat(amountSlider.value);
-                const months = selectedTerm;
-
-                // Update display values
-                amountDisplay.textContent = '$' + amount.toLocaleString();
-                termDisplay.textContent = months + (months === 1 ? ' month' : ' months');
-
-                // Interest rate: 8% APR
-                const annualRate = 0.08;
-                interestRate.textContent = 'Interest rate: 8% APR';
-
-                // Monthly payment formula (amortization)
-                const monthlyRate = annualRate / 12;
-                if (months === 0) {
-                    paymentAmount.textContent = '$' + amount.toFixed(2);
-                } else {
-                    const power = Math.pow(1 + monthlyRate, months);
-                    const monthlyPayment = amount * (monthlyRate * power) / (power - 1);
-                    paymentAmount.textContent = '$' + monthlyPayment.toFixed(2);
-                }
-            }
-
-            // --- Initialize ---
-            updateCalculator();
-
-            // --- Apply Now button navigates to apply.html ---
-            applyButton.addEventListener('click', function() {
-                localStorage.setItem('loanAmount', amountSlider.value);
-                localStorage.setItem('loanTerm', selectedTerm.toString());
-                window.location.href = 'apply.html';
-            });
-        </script>
     </body>
 
 </html>

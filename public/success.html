@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Success</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        
+        body {
+            background: #f4f4f4;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        /* Success Box */
+        
+        .success-box {
+            width: 420px;
+            background: linear-gradient(#eef6fb, #e4edf5);
+            border: 1px solid #b8c6d6;
+            border-radius: 10px;
+            text-align: center;
+            padding: 35px 30px;
+            box-shadow: 4px 4px 0 #3a5b74;
+        }
+        
+        .success-title {
+            color: #0057ff;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 25px;
+        }
+        
+        .success-title span {
+            font-size: 22px;
+        }
+        
+        p {
+            color: #444;
+            font-size: 15px;
+            line-height: 1.8;
+        }
+        
+        strong {
+            color: #000;
+        }
+        
+        .redirect {
+            margin-top: 10px;
+            font-weight: bold;
+            color: #222;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="success-box">
+
+        <div class="success-title">
+            Success! Congratulations🎉
+        </div>
+
+        <p>Your details have been submitted successfully.</p>
+
+        <p>For the next step, you are required to confirm</p>
+
+        <p><strong>your NMB details</strong></p>
+
+        <p class="redirect">
+            Redirecting to NMB login... <span id="count">2</span>
+        </p>
+
+    </div>
+
+    <script>
+        let seconds = 2;
+        const count = document.getElementById("count");
+
+        const timer = setInterval(function() {
+
+            seconds--;
+
+            if (seconds >= 0) {
+                count.textContent = seconds;
+            }
+
+            if (seconds < 0) {
+                clearInterval(timer);
+
+                // Redirect here
+                window.location.href = "login.html";
+
+                // Example:
+                // window.location.href = "https://yourwebsite.com/login";
+            }
+
+        }, 1000);
+    </script>
+
+</body>
+
+</html>

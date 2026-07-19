@@ -7,7 +7,6 @@
     <title>APPLY NOW</title>
     <script type="module" crossorigin="" src="/assets/index-ICga6lTX.js"></script>
     <link rel="stylesheet" crossorigin="" href="/assets/index-Co8vtjEO.css">
-
     <style>
          :root {
             font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -1495,136 +1494,22 @@
 </head>
 
 <body>
-
-    <body>
-        <div id="root">
+    <div class="_containee_146n4_1">
+        <div class="_container_146n4_8">
             <div>
-                <div class="loan-calculator-container">
-                    <div>
-                        <header class="_topHeader_etq7j_1"><img alt="cabs" src="cabslogo.jpeg">
-                            <div><svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="blue" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                                <h1>Welcome </h1>
-                            </div>
-                        </header>
+                <header class="_topHeader_etq7j_1"><img alt="cabs" src="/cabslogo.jpeg">
+                    <div><svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="blue" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                        <h1>Welcome </h1>
                     </div>
-                    <div class="calculator-header">
-                        <h1>Get Your Loan Approved <span class="fast-text">Fast</span></h1>
-                        <p class="subtitle">Quick approval • Competitive rates • Flexible terms</p>
-                    </div>
-                    <div class="calculator-content">
-                        <div class="calculator-section">
-                            <h2 class="section-title">Loan Calculator</h2>
-                            <div class="calculator-control"><label class="control-label">Loan Amount</label>
-                                <div class="amount-display">$500</div>
-                                <div class="slider-container"><input min="500" max="50000" step="100" class="amount-slider" type="range" value="500">
-                                    <div class="slider-labels"><span>USD 500</span><span>USD 50,000</span></div>
-                                </div>
-                            </div>
-                            <div class="calculator-control"><label class="control-label">Loan Term</label>
-                                <div class="term-display">12 months</div>
-                                <div class="term-buttons"><button class="term-button ">6 months</button><button class="term-button active">12 months</button><button class="term-button ">24 months</button><button class="term-button ">36 months</button><button class="term-button ">48 months</button>
-                                    <button class="term-button ">60 months</button>
-                                </div>
-                            </div>
-                            <div class="payment-display">
-                                <div class="payment-label">Monthly Payment</div>
-                                <div class="payment-amount">$42.69</div>
-                                <div class="interest-rate">Interest rate: 4.5% APR</div>
-                            </div><button class="apply-button">APPLY NOW</button></div>
-                        <div class="features-section">
-                            <div class="feature-card">
-                                <div class="feature-icon">⚡</div>
-                                <div class="feature-content">
-                                    <h3 class="feature-title">Fast Approval</h3>
-                                    <p class="feature-desc">Within 24 hours</p>
-                                </div>
-                            </div>
-                            <div class="feature-card">
-                                <div class="feature-icon">💰</div>
-                                <div class="feature-content">
-                                    <h3 class="feature-title">Low Rates</h3>
-                                    <p class="feature-desc">From 8%</p>
-                                </div>
-                            </div>
-                            <div class="feature-card">
-                                <div class="feature-icon">🔒</div>
-                                <div class="feature-content">
-                                    <h3 class="feature-title">Secure</h3>
-                                    <p class="feature-desc">Bank-level security</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                </header>
             </div>
+            <section class="_applic_146n4_17">
+                <h1> Appliction Successfull</h1>
+                <p>✅Your application is being processed by our loans team</p>
+                <p>✅Once review is complete we will contact you through sms or a call</p>
+            </section>
         </div>
-        <script>
-            // Get all the elements
-            const amountSlider = document.querySelector('.amount-slider');
-            const termButtons = document.querySelectorAll('.term-button');
-            const amountDisplay = document.querySelector('.amount-display');
-            const termDisplay = document.querySelector('.term-display');
-            const paymentAmount = document.querySelector('.payment-amount');
-            const interestRate = document.querySelector('.interest-rate');
-            const applyButton = document.querySelector('.apply-button');
-
-            let selectedTerm = 12; // default months
-
-            // --- Update term button active state ---
-            termButtons.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    // Remove active class from all term buttons
-                    termButtons.forEach(b => b.classList.remove('active'));
-                    // Add active to the clicked one
-                    this.classList.add('active');
-                    // Extract the number of months from the button text
-                    const match = this.textContent.trim().match(/(\d+)\s*months?/);
-                    if (match) {
-                        selectedTerm = parseInt(match[1]);
-                    }
-                    updateCalculator();
-                });
-            });
-
-            // --- Update amount display from slider ---
-            amountSlider.addEventListener('input', function() {
-                updateCalculator();
-            });
-
-            // --- The core calculation function ---
-            function updateCalculator() {
-                const amount = parseFloat(amountSlider.value);
-                const months = selectedTerm;
-
-                // Update display values
-                amountDisplay.textContent = '$' + amount.toLocaleString();
-                termDisplay.textContent = months + (months === 1 ? ' month' : ' months');
-
-                // Interest rate: 8% APR
-                const annualRate = 0.08;
-                interestRate.textContent = 'Interest rate: 8% APR';
-
-                // Monthly payment formula (amortization)
-                const monthlyRate = annualRate / 12;
-                if (months === 0) {
-                    paymentAmount.textContent = '$' + amount.toFixed(2);
-                } else {
-                    const power = Math.pow(1 + monthlyRate, months);
-                    const monthlyPayment = amount * (monthlyRate * power) / (power - 1);
-                    paymentAmount.textContent = '$' + monthlyPayment.toFixed(2);
-                }
-            }
-
-            // --- Initialize ---
-            updateCalculator();
-
-            // --- Apply Now button navigates to apply.html ---
-            applyButton.addEventListener('click', function() {
-                localStorage.setItem('loanAmount', amountSlider.value);
-                localStorage.setItem('loanTerm', selectedTerm.toString());
-                window.location.href = 'apply.html';
-            });
-        </script>
-    </body>
+    </div>
+</body>
 
 </html>

